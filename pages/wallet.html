@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Wallet - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <a href="/pages/get-started.html" class="back-link">← Back to Get Started</a>
+        <h2 class="wallet-page-title">Create Your Wallet</h2>
+
+        <div class="warning-banner">
+            ⚠ Never share your private key. Sepolia testnet only. Losing your password means losing access forever.
+        </div>
+
+        <div class="steps-grid">
+            <article class="step-card">
+                <div class="step-number">1</div>
+                <h3>Generate Wallet</h3>
+                <p>Click Generate Wallet to create a new Ethereum wallet locally in your browser.</p>
+            </article>
+            <article class="step-card">
+                <div class="step-number">2</div>
+                <h3>Save Your Details</h3>
+                <p>Copy your address and private key somewhere safe — they are shown only once.</p>
+            </article>
+            <article class="step-card">
+                <div class="step-number">3</div>
+                <h3>Set a Password</h3>
+                <p>Enter a strong password to encrypt your wallet into a downloadable keystore file.</p>
+            </article>
+            <article class="step-card">
+                <div class="step-number">4</div>
+                <h3>Import to MetaMask</h3>
+                <p>Import the keystore JSON into MetaMask via Import Account → JSON File.</p>
+            </article>
+        </div>
+
+        <section class="wallet-generation">
+            <button id="generateWalletBtn" class="btn btn-primary" style="width:100%">Generate Wallet</button>
+
+            <div id="walletDetails" class="wallet-details-card hidden">
+                <h3>Your Wallet Details</h3>
+                <p style="color:var(--color-text-muted);margin-bottom:24px">Save these details securely. They will not be shown again.</p>
+
+                <div class="wallet-info">
+                    <label>Public Address</label>
+                    <div class="copy-field">
+                        <span id="walletAddress"></span>
+                        <button class="copy-btn" data-copy="address">Copy</button>
+                    </div>
+                </div>
+
+                <div class="wallet-info">
+                    <label>Private Key</label>
+                    <div class="copy-field">
+                        <span id="walletPrivateKey"></span>
+                        <button class="copy-btn" data-copy="privateKey">Copy</button>
+                    </div>
+                    <p class="warning-text">⚠ Never share this with anyone!</p>
+                </div>
+
+                <div class="wallet-info">
+                    <label>Mnemonic Phrase</label>
+                    <div class="copy-field">
+                        <span id="walletMnemonic"></span>
+                    </div>
+                    <p class="warning-text">⚠ Never share this with anyone!</p>
+                </div>
+            </div>
+
+            <div id="keystoreSection" class="wallet-details-card hidden" style="margin-top:24px">
+                <h3>Download Encrypted Keystore</h3>
+                <p style="color:var(--color-text-muted);margin-bottom:24px">Encrypt your wallet with a password to create a JSON keystore file you can import into MetaMask.</p>
+                <div class="keystore-form">
+                    <label for="keystorePassword">Password</label>
+                    <input type="password" id="keystorePassword" placeholder="Enter a strong password">
+
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password">
+
+                    <button id="downloadKeystoreBtn" class="btn btn-primary" style="width:100%">Download Keystore</button>
+                </div>
+            </div>
+        </section>
+
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <script type="module" src="../js/wallet.js"></script>
+</body>
+</html>

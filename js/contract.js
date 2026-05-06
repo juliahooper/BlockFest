@@ -1,5 +1,5 @@
 // Import ethers.js v6 from CDN
-import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js";
+import { ethers } from "https://esm.sh/ethers@6.7.0";
 
 // ---------------------------------------------------------------------
 // Contract Configuration Constants
@@ -10,7 +10,7 @@ import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethe
  * The deployed address of the BlockFest smart contract on Ethereum Sepolia testnet.
  * This is the central point of contact for all frontend interactions with the contract.
  */
-export const CONTRACT_ADDRESS = "0x0e624C107c4cC1d221963aDe5Fabd01AfFD24F0E";
+export const CONTRACT_ADDRESS = "0xbB4429408330b4e18Ad8ada91ECE37E0cFC45b62";
 
 /**
  * @constant {Array} CONTRACT_ABI
@@ -183,12 +183,16 @@ export const CONTRACT_ABI = [
         "type": "function",
         "name": "getGroup",
         "inputs": [{"type": "uint256", "name": "groupId"}],
-        "outputs": [
-            {"type": "address", "name": "creator"},
-            {"type": "uint256", "name": "deadline"},
-            {"type": "uint256", "name": "paidCount"},
-            {"type": "uint8", "name": "state"}
-        ],
+        "outputs": [{
+            "type": "tuple",
+            "name": "group",
+            "components": [
+                {"type": "address", "name": "creator"},
+                {"type": "uint256", "name": "deadline"},
+                {"type": "uint256", "name": "paidCount"},
+                {"type": "uint8", "name": "state"}
+            ]
+        }],
         "stateMutability": "view"
     },
     {
@@ -202,10 +206,14 @@ export const CONTRACT_ABI = [
         "type": "function",
         "name": "getAccount",
         "inputs": [{"type": "address", "name": "user"}],
-        "outputs": [
-            {"type": "uint256", "name": "groupId"},
-            {"type": "uint256", "name": "escrowBalance"}
-        ],
+        "outputs": [{
+            "type": "tuple",
+            "name": "account",
+            "components": [
+                {"type": "uint256", "name": "groupId"},
+                {"type": "uint256", "name": "escrowBalance"}
+            ]
+        }],
         "stateMutability": "view"
     },
     {
@@ -213,6 +221,54 @@ export const CONTRACT_ABI = [
         "name": "getUnclaimedRefund",
         "inputs": [{"type": "address", "name": "user"}],
         "outputs": [{"type": "uint256"}],
+        "stateMutability": "view"
+    },
+    // Ticket Availability + Chain View Functions
+    {
+        "type": "function",
+        "name": "totalTickets",
+        "inputs": [],
+        "outputs": [{"type": "uint256"}],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "availableTickets",
+        "inputs": [],
+        "outputs": [{"type": "uint256"}],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "chainLength",
+        "inputs": [],
+        "outputs": [{"type": "uint256"}],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getChainBlock",
+        "inputs": [{"type": "uint256", "name": "blockIndex"}],
+        "outputs": [{
+            "type": "tuple",
+            "name": "",
+            "components": [
+                {"type": "uint256", "name": "blockNumber"},
+                {"type": "uint256", "name": "groupId"},
+                {"type": "bytes32", "name": "previousHash"},
+                {"type": "bytes32", "name": "blockHash"},
+                {"type": "address[]", "name": "members"},
+                {"type": "uint256", "name": "timestamp"},
+                {"type": "uint256", "name": "ticketCount"}
+            ]
+        }],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "verifyChain",
+        "inputs": [],
+        "outputs": [{"type": "bool"}],
         "stateMutability": "view"
     },
     // Events
@@ -292,6 +348,23 @@ export const CONTRACT_ABI = [
             {"indexed": true, "type": "address", "name": "claimant"},
             {"indexed": false, "type": "uint256", "name": "amount"}
         ]
+    },
+    {
+        "type": "event",
+        "name": "TicketsReserved",
+        "inputs": [
+            {"indexed": true, "type": "uint256", "name": "groupId"},
+            {"indexed": false, "type": "uint256", "name": "ticketCount"}
+        ]
+    },
+    {
+        "type": "event",
+        "name": "BlockAdded",
+        "inputs": [
+            {"indexed": true, "type": "uint256", "name": "blockNumber"},
+            {"indexed": true, "type": "uint256", "name": "groupId"},
+            {"indexed": false, "type": "bytes32", "name": "blockHash"}
+        ]
     }
 ];
 
@@ -313,35 +386,55 @@ export const CONTRACT_ABI = [
  * @throws {Error} If MetaMask is not installed, user rejects connection, or wrong network
  */
 export async function getContract() {
-    // Check if MetaMask is available
+    console.log('[getContract] called');
+
     if (!window.ethereum) {
+        console.error('[getContract] window.ethereum is undefined — MetaMask not detected');
         throw new Error("MetaMask is not installed. Please install MetaMask to use BlockFest.");
     }
+    console.log('[getContract] window.ethereum found:', window.ethereum);
 
     try {
-        // Request account access
+        console.log('[getContract] requesting accounts...');
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        console.log('[getContract] accounts returned:', accounts);
+
         if (!accounts || accounts.length === 0) {
             throw new Error("Please connect your MetaMask wallet to use BlockFest.");
         }
         const userAddress = accounts[0];
+        console.log('[getContract] userAddress:', userAddress);
 
-        // Create provider and signer
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
+        console.log('[getContract] signer obtained');
 
-        // Check network
         const network = await provider.getNetwork();
+        console.log('[getContract] network chainId:', network.chainId.toString());
+
         if (network.chainId !== 11155111n) {
-            throw new Error("Please switch MetaMask to the Sepolia test network to use BlockFest.");
+            console.log('[getContract] wrong network, attempting auto-switch to Sepolia...');
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0xaa36a7' }],
+                });
+                console.log('[getContract] switched to Sepolia successfully');
+            } catch (switchError) {
+                console.error('[getContract] network switch failed:', switchError);
+                if (switchError.code === 4902) {
+                    throw new Error("Please add the Sepolia test network to MetaMask manually.");
+                }
+                throw new Error("Please switch MetaMask to the Sepolia test network to use BlockFest.");
+            }
         }
 
-        // Create contract instance
         const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+        console.log('[getContract] contract instance created at', CONTRACT_ADDRESS);
 
         return { contract, userAddress, provider, signer };
     } catch (error) {
-        // Handle specific MetaMask errors
+        console.error('[getContract] error:', error.code, error.message, error);
         if (error.code === 4001) {
             throw new Error("Please connect your MetaMask wallet to use BlockFest.");
         } else if (error.code === 4902) {
@@ -349,7 +442,7 @@ export async function getContract() {
         } else if (error.message.includes('network')) {
             throw new Error("Please switch MetaMask to the Sepolia test network to use BlockFest.");
         } else {
-            throw error; // Re-throw other errors
+            throw error;
         }
     }
 }

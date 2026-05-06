@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Admin Panel - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul class="nav-links">
+                <li><a href="/pages/index.html">Home</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/balance.html">Check Balance</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+                <li><a href="/pages/admin.html" class="active">Admin Panel</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h2>Venue Admin Panel</h2>
+
+        <!-- MetaMask Connection Status -->
+        <div id="connectionStatus" class="status-bar">
+            <span id="statusText">Not Connected</span>
+            <button id="connectWalletBtn">Connect MetaMask</button>
+        </div>
+
+        <!-- Ownership Verification -->
+        <div id="ownershipIndicator" class="ownership-indicator hidden">
+            <span class="verified">✓ Ownership Verified</span>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div id="statsDashboard" class="dashboard hidden">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Ticket Supply</h3>
+                    <div id="totalSupply" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Tickets Sold</h3>
+                    <div id="totalSold" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total SETH in Escrow</h3>
+                    <div id="totalEscrow" class="stat-value">0 SETH</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total SETH Received</h3>
+                    <div id="totalReceived" class="stat-value">0 SETH</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Groups</h3>
+                    <div id="activeGroups" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed Groups</h3>
+                    <div id="completedGroups" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Cancelled Groups</h3>
+                    <div id="cancelledGroups" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Tickets Returned</h3>
+                    <div id="ticketsReturned" class="stat-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Groups Table -->
+        <div id="groupsSection" class="table-section hidden">
+            <h3>All Groups</h3>
+            <table id="groupsTable" class="data-table">
+                <thead>
+                    <tr>
+                        <th>Group ID</th>
+                        <th>Creator</th>
+                        <th>Members</th>
+                        <th>Paid</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Escrow</th>
+                    </tr>
+                </thead>
+                <tbody id="groupsTableBody">
+                    <!-- Rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Blockchella Chain Explorer -->
+        <div id="chainSection" class="table-section hidden">
+            <h3>Blockchella Chain</h3>
+            <div class="chain-stats">
+                <div class="stat-item">
+                    <label>Chain Length:</label>
+                    <span id="chainLengthDisplay">0</span> blocks
+                </div>
+                <div class="stat-item">
+                    <label>Chain Integrity:</label>
+                    <span id="chainIntegrity">Not verified</span>
+                </div>
+                <button id="verifyChainBtn">Verify Chain</button>
+            </div>
+            <table class="data-table" id="chainTable">
+                <thead>
+                    <tr>
+                        <th>Block #</th>
+                        <th>Group ID</th>
+                        <th>Members</th>
+                        <th>Tickets</th>
+                        <th>Timestamp</th>
+                        <th>Block Hash</th>
+                        <th>Previous Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="chainTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Controls -->
+        <div id="controls" class="controls hidden">
+            <label>
+                <input type="checkbox" id="realTimeToggle" checked>
+                Enable Real-time Updates
+            </label>
+            <button id="withdrawFundsBtn" class="withdraw-btn">Withdraw Funds</button>
+        </div>
+
+        <!-- Withdraw Status -->
+        <div id="withdrawStatus" class="status-area hidden"></div>
+
+        <!-- Message Area -->
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <!-- Import admin.js as module -->
+    <script type="module" src="../js/admin.js"></script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\user\BlockFest\BlockFest\pages\admin.html

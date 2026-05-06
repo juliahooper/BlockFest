@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Your Ticket - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul class="nav-links">
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html" class="active">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h2>Return Your Ticket</h2>
+
+        <!-- MetaMask Connection Status -->
+        <div id="connectionStatus" class="status-bar">
+            <span id="statusText">Not Connected</span>
+            <button id="connectWalletBtn">Connect MetaMask</button>
+        </div>
+
+        <!-- Pre-Return Information Section -->
+        <div id="preReturnSection" class="section hidden">
+            <h3>Ticket Return Information</h3>
+            <div class="balance-info">
+                <p><strong>Current Ticket Balance:</strong> <span id="currentTicketBalance">Loading...</span></p>
+                <p><strong>Current SETH Balance:</strong> <span id="currentSETHBalance">Loading...</span></p>
+                <p><strong>Refund Amount:</strong> <span id="refundAmount">Loading...</span></p>
+            </div>
+            <div class="refund-policy">
+                <p><em>Returning your ticket will burn your ticket token permanently and refund the ticket price to your wallet.</em></p>
+            </div>
+            <div class="confirmation">
+                <label>
+                    <input type="checkbox" id="confirmationCheckbox">
+                    I understand that returning my ticket is permanent and cannot be undone
+                </label>
+            </div>
+            <button id="returnTicketBtn" disabled>Return Ticket</button>
+        </div>
+
+        <!-- Transaction Status Area -->
+        <div id="transactionStatus" class="status-area hidden"></div>
+
+        <!-- Success Panel -->
+        <div id="successPanel" class="success-panel hidden">
+            <h3>Ticket Returned Successfully!</h3>
+            <p id="successMessage">Your ticket has been returned and the refund has been processed.</p>
+            <div class="balance-info">
+                <p><strong>Pre-Return Ticket Balance:</strong> <span id="preReturnTicketBalance"></span></p>
+                <p><strong>Post-Return Ticket Balance:</strong> <span id="postReturnTicketBalance"></span></p>
+                <p><strong>Pre-Return SETH Balance:</strong> <span id="preReturnSETHBalance"></span></p>
+                <p><strong>Post-Return SETH Balance:</strong> <span id="postReturnSETHBalance"></span></p>
+            </div>
+            <p><a id="etherscanLink" href="#" target="_blank">View Transaction on Etherscan</a></p>
+        </div>
+
+        <!-- Unclaimed Refund Section -->
+        <div id="unclaimedRefundSection" class="section">
+            <h3>Unclaimed Refunds</h3>
+            <button id="checkUnclaimedBtn">Check for Unclaimed Refunds</button>
+            <div id="unclaimedInfo" class="hidden">
+                <p><strong>Unclaimed Refund Amount:</strong> <span id="unclaimedAmount">0</span></p>
+                <button id="claimRefundBtn" class="hidden">Claim Refund</button>
+            </div>
+        </div>
+
+        <!-- Message Area -->
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <!-- Import return.js as module -->
+    <script type="module" src="../js/return.js"></script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\user\BlockFest\BlockFest\pages\return.html

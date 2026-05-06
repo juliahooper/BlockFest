@@ -35,6 +35,9 @@ contract BlockFest is ReentrancyGuard {
     /// @notice Address with administrative privileges.
     address public immutable owner;
 
+    /// @notice Maximum number of tickets available for the event. Set at deployment and never changes.
+    uint256 public immutable totalTickets;
+
     // ---------------------------------------------------------------------
     // ERC-20 storage
     // ---------------------------------------------------------------------
@@ -62,6 +65,28 @@ contract BlockFest is ReentrancyGuard {
     mapping(address => uint256) private _unclaimedRefunds;
 
     // ---------------------------------------------------------------------
+    // Ticket availability tracking
+    // ---------------------------------------------------------------------
+
+    /// @notice Tickets currently held by active groups with at least one payment.
+    /// Decremented when a group is cancelled (if at least one member paid) or when tickets are released to members.
+    uint256 private _reservedTickets;
+
+    /// @notice Tickets permanently transferred to completed group members.
+    /// Decremented when a ticket is returned to the owner's pool.
+    uint256 private _soldTickets;
+
+    // ---------------------------------------------------------------------
+    // Chain state
+    // ---------------------------------------------------------------------
+
+    /// @notice On-chain block data indexed by chain position. Position 0 is the genesis block.
+    mapping(uint256 => TicketBlock) private _chain;
+
+    /// @notice Total number of blocks in the chain including the genesis block.
+    uint256 public chainLength;
+
+    // ---------------------------------------------------------------------
     // Group state types
     // ---------------------------------------------------------------------
 
@@ -80,6 +105,19 @@ contract BlockFest is ReentrancyGuard {
         uint256 deadline;
         uint256 paidCount;
         GroupState state;
+    }
+
+    /// @notice On-chain block representing a confirmed ticket group.
+    /// @dev Each block cryptographically links to the previous block via previousHash,
+    ///   creating a verifiable chain of confirmed ticket groups within the contract.
+    struct TicketBlock {
+        uint256 blockNumber;
+        uint256 groupId;
+        bytes32 previousHash;
+        bytes32 blockHash;
+        address[] members;
+        uint256 timestamp;
+        uint256 ticketCount;
     }
 
     // ---------------------------------------------------------------------
@@ -120,7 +158,7 @@ contract BlockFest is ReentrancyGuard {
     /// @notice Emitted when a group is cancelled before deadline or by timeout.
     event GroupCancelled(uint256 indexed groupId, address indexed triggeredBy);
 
-    /// @notice Emitted when a returned ticket is burned and refund is executed.
+    /// @notice Emitted when a returned ticket is transferred back to the owner and the refund is executed.
     event TicketReturned(address indexed holder, uint256 refundAmount);
 
     /// @notice Emitted when an automatic refund fails and the amount is recorded.
@@ -128,6 +166,12 @@ contract BlockFest is ReentrancyGuard {
 
     /// @notice Emitted when a user successfully claims a fallback refund.
     event RefundClaimed(address indexed claimant, uint256 amount);
+
+    /// @notice Emitted when tickets are reserved for a group on the first member payment.
+    event TicketsReserved(uint256 indexed groupId, uint256 ticketCount);
+
+    /// @notice Emitted when a completed group is added as a new block to the on-chain chain.
+    event BlockAdded(uint256 indexed blockNumber, uint256 indexed groupId, bytes32 blockHash);
 
     // ---------------------------------------------------------------------
     // Modifiers
@@ -150,22 +194,37 @@ contract BlockFest is ReentrancyGuard {
     // ---------------------------------------------------------------------
 
     /**
-     * @notice Deploy the BlockFest ticket system with base supply and pricing.
+     * @notice Deploy the BlockFest ticket system with fixed ticket supply and pricing.
      * @param _ticketPrice Price per ticket in wei.
-     * @param _initialSupply Initial owner ticket supply.
+     * @param _totalTickets Total event capacity; all tickets minted to the owner at deployment.
+     *   _totalTickets replaces the former _initialSupply parameter. The supply is fixed at
+     *   deployment and never changes; _releaseTickets transfers from the owner pool rather
+     *   than minting new tokens.
      */
-    constructor(uint256 _ticketPrice, uint256 _initialSupply) {
+    constructor(uint256 _ticketPrice, uint256 _totalTickets) {
         require(_ticketPrice > 0, "Ticket price must be greater than zero");
-        require(_initialSupply > 0, "Initial supply must be greater than zero");
+        require(_totalTickets > 0, "Initial supply must be greater than zero");
 
         owner = msg.sender;
         ticketPrice = _ticketPrice;
+        totalTickets = _totalTickets;
         nextGroupId = 1;
 
-        _totalSupply = _initialSupply;
-        _balances[msg.sender] = _initialSupply;
+        _totalSupply = _totalTickets;
+        _balances[msg.sender] = _totalTickets;
 
-        emit Transfer(address(0), msg.sender, _initialSupply);
+        emit Transfer(address(0), msg.sender, _totalTickets);
+
+        _chain[0] = TicketBlock({
+            blockNumber: 0,
+            groupId: 0,
+            previousHash: bytes32(0),
+            blockHash: keccak256(abi.encode("BlockFest Genesis")),
+            members: new address[](0),
+            timestamp: block.timestamp,
+            ticketCount: 0
+        });
+        chainLength = 1;
     }
 
     // ---------------------------------------------------------------------
@@ -265,6 +324,10 @@ contract BlockFest is ReentrancyGuard {
      * @param deadlineHours Number of hours from now until the group deadline.
      */
     function createGroup(address[] memory members, uint256 deadlineHours) external {
+        require(
+            availableTickets() >= members.length + 1,
+            "Not enough tickets available for this group size"
+        );
         require(members.length >= 1, "Group must have at least one other member");
         require(members.length + 1 <= MAX_GROUP_SIZE, "Group size exceeds maximum of 4 including creator");
         require(deadlineHours >= 1, "Deadline must be at least 1 hour");
@@ -313,6 +376,9 @@ contract BlockFest is ReentrancyGuard {
 
     /**
      * @notice Internal function to release tickets when a group is fully paid.
+     * @dev Transfers tickets from the owner's pool to each member rather than minting,
+     *   keeping total supply fixed. Updates reservation and sold counters, then appends
+     *   the group as a new block to the on-chain chain.
      * @param groupId The ID of the group to release tickets for.
      */
     function _releaseTickets(uint256 groupId) internal {
@@ -324,14 +390,18 @@ contract BlockFest is ReentrancyGuard {
         uint256 memberCount = _groupMembers[groupId].length;
         for (uint256 i = 0; i < memberCount; i++) {
             address member = _groupMembers[groupId][i];
+            _balances[owner] -= 1;
             _balances[member] += 1;
             _totalEscrowLocked -= ticketPrice;
             _accounts[member].groupId = 0;
             _accounts[member].escrowBalance = 0;
-            emit Transfer(address(0), member, 1);
+            emit Transfer(owner, member, 1);
         }
 
-        _totalSupply += memberCount;
+        _reservedTickets -= memberCount;
+        _soldTickets += memberCount;
+        _addToChain(groupId, _groupMembers[groupId]);
+
         emit GroupCompleted(groupId);
     }
 
@@ -340,6 +410,8 @@ contract BlockFest is ReentrancyGuard {
      * @dev This function is nonReentrant to prevent reentrancy attacks, even though no ETH is sent out directly.
      * The function may call _releaseTickets internally if the group becomes fully paid, which modifies state and emits events.
      * Following Checks-Effects-Interactions: checks first, then state updates, then potential internal call.
+     * On the first payment (paidCount goes from 0 to 1), tickets are reserved for the entire group
+     * from the available pool. This is the authoritative availability guard.
      * @param groupId The ID of the group to join.
      */
     function joinGroup(uint256 groupId) external payable nonReentrant {
@@ -356,6 +428,15 @@ contract BlockFest is ReentrancyGuard {
         _groups[groupId].paidCount += 1;
         _totalEscrowLocked += ticketPrice;
         emit MemberJoined(groupId, msg.sender, _groups[groupId].paidCount);
+
+        if (_groups[groupId].paidCount == 1) {
+            require(
+                availableTickets() >= _groupMembers[groupId].length,
+                "Not enough tickets available for this group"
+            );
+            _reservedTickets += _groupMembers[groupId].length;
+            emit TicketsReserved(groupId, _groupMembers[groupId].length);
+        }
 
         // Completion check
         if (_groups[groupId].paidCount == _groupMembers[groupId].length) {
@@ -414,9 +495,14 @@ contract BlockFest is ReentrancyGuard {
      * Then, attempt push refund; if successful, remove from _totalUnclaimedRefunds; if failed, add to _unclaimedRefunds mapping.
      * This ensures accounting is consistent even if some refunds fail.
      * Uses two loops: first for effects (state updates), second for interactions (external calls) to prevent reentrancy.
+     * If the group had at least one payment, the ticket reservation is released back to the available pool.
      * @param groupId The ID of the group to process refunds for.
      */
     function _processRefunds(uint256 groupId) private {
+        if (_groups[groupId].paidCount > 0) {
+            _reservedTickets -= _groupMembers[groupId].length;
+        }
+
         uint256 memberCount = _groupMembers[groupId].length;
         uint256[] memory refundAmounts = new uint256[](memberCount);
 
@@ -479,11 +565,12 @@ contract BlockFest is ReentrancyGuard {
 
     /**
      * @notice Allows a ticket holder to return their ticket for a refund.
-     * @dev Burns the ticket and refunds the ticket price. Uses Checks-Effects-Interactions.
-     * If transfer fails, restores state and reverts to maintain consistency.
-     * The nonReentrant modifier prevents reentrant calls, ensuring no reentrancy attacks.
-     * CEI pattern is followed: balance and totalSupply are decremented before the external transfer.
-     * Wake's reentrancy warning is a false positive due to the nonReentrant protection.
+     * @dev Transfers the ticket back to the owner's pool and decrements _soldTickets to restore
+     *   availability for future groups. Uses Checks-Effects-Interactions.
+     *   If transfer fails, restores all state and reverts to maintain consistency.
+     *   The nonReentrant modifier prevents reentrant calls, ensuring no reentrancy attacks.
+     *   CEI pattern is followed: balances and availability are updated before the external transfer.
+     *   Wake's reentrancy warning is a false positive due to the nonReentrant protection.
      */
     function returnTicket() external nonReentrant {
         // Checks
@@ -492,14 +579,17 @@ contract BlockFest is ReentrancyGuard {
 
         // Effects
         _balances[msg.sender] -= 1;
-        _totalSupply -= 1;
+        _balances[owner] += 1;
+        _soldTickets -= 1;
+        emit Transfer(msg.sender, owner, 1);
 
         // Interactions
         (bool success,) = payable(msg.sender).call{value: ticketPrice}("");
         if (!success) {
             // Restore state on failure
             _balances[msg.sender] += 1;
-            _totalSupply += 1;
+            _balances[owner] -= 1;
+            _soldTickets += 1;
             revert("Ticket return transfer failed - please try again");
         }
 
@@ -524,11 +614,63 @@ contract BlockFest is ReentrancyGuard {
     }
 
     /**
+     * @notice Returns the number of tickets currently available for new group reservations.
+     * @dev Computed as totalTickets minus tickets already reserved by active groups and
+     *   tickets already transferred to completed group members.
+     *   Called as an advisory check in createGroup and as the authoritative guard in joinGroup
+     *   at the moment of first payment.
+     * @return uint256 Number of tickets available for reservation.
+     */
+    function availableTickets() public view returns (uint256) {
+        return totalTickets - _reservedTickets - _soldTickets;
+    }
+
+    /**
      * @notice Fallback function to reject direct ETH transfers.
      * @dev Prevents accidental ETH locks; users must use joinGroup for payments.
      */
     receive() external payable {
         revert("Direct ETH transfers not accepted - use joinGroup to purchase a ticket");
+    }
+
+    // ---------------------------------------------------------------------
+    // Internal Chain Functions
+    // ---------------------------------------------------------------------
+
+    /**
+     * @notice Adds a completed group as a new block to the on-chain chain.
+     * @dev Uses abi.encode (not encodePacked) to prevent hash collisions with dynamic arrays.
+     *   Called only from _releaseTickets after all state changes are complete.
+     *   Each block cryptographically links to the previous block via previousHash, creating
+     *   a verifiable chain of confirmed ticket groups within the contract.
+     *   The block hash commits to: chain position, group ID, previous hash, timestamp,
+     *   member addresses, and member count.
+     * @param groupId The ID of the completed group.
+     * @param members The snapshot of group member addresses at completion.
+     */
+    function _addToChain(uint256 groupId, address[] memory members) internal {
+        bytes32 previousHash = _chain[chainLength - 1].blockHash;
+        bytes32 newBlockHash = keccak256(abi.encode(
+            chainLength,
+            groupId,
+            previousHash,
+            block.timestamp,
+            members,
+            members.length
+        ));
+
+        _chain[chainLength] = TicketBlock({
+            blockNumber: chainLength,
+            groupId: groupId,
+            previousHash: previousHash,
+            blockHash: newBlockHash,
+            members: members,
+            timestamp: block.timestamp,
+            ticketCount: members.length
+        });
+
+        emit BlockAdded(chainLength, groupId, newBlockHash);
+        chainLength += 1;
     }
 
     // ---------------------------------------------------------------------
@@ -553,5 +695,36 @@ contract BlockFest is ReentrancyGuard {
     /// @notice Returns the unclaimed refund amount for a given user address.
     function getUnclaimedRefund(address user) external view returns (uint256) {
         return _unclaimedRefunds[user];
+    }
+
+    /**
+     * @notice Returns the block at a given chain index.
+     * @dev An out-of-range index returns a zero-value TicketBlock struct.
+     *   Callers can detect an invalid index via blockHash == bytes32(0),
+     *   except for the genesis block which has a non-zero blockHash by design.
+     * @param blockIndex The zero-based position in the chain.
+     * @return TicketBlock memory The block data at the given index.
+     */
+    function getChainBlock(uint256 blockIndex) external view returns (TicketBlock memory) {
+        return _chain[blockIndex];
+    }
+
+    /**
+     * @notice Verifies the integrity of the on-chain block chain by checking all hash links.
+     * @dev FOR OFF-CHAIN USE ONLY. Must never be called from within a transaction or by another
+     *   contract. This function contains an unbounded loop that will exceed the block gas limit
+     *   as the chain grows. Safe when called as a view function from ethers.js or similar
+     *   off-chain tooling.
+     *   Iterates every block from index 1 to chainLength - 1 and verifies that each block's
+     *   previousHash matches the actual blockHash of the prior block.
+     * @return bool True if all block links are valid, false if any link is broken.
+     */
+    function verifyChain() external view returns (bool) {
+        for (uint256 i = 1; i < chainLength; i++) {
+            if (_chain[i].previousHash != _chain[i - 1].blockHash) {
+                return false;
+            }
+        }
+        return true;
     }
 }

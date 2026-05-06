@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Your Ticket - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html" class="active">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <h2>Buy Your Ticket</h2>
+
+        <div id="connectionStatus" class="connection-status">
+            <span id="statusText">Not Connected</span>
+            <button id="connectWalletBtn">Connect MetaMask</button>
+        </div>
+
+        <div class="purchase-toggle">
+            <button id="soloToggle" class="toggle-btn active">
+                Buy Solo
+            </button>
+            <button id="groupToggle" class="toggle-btn">
+                Join a Group
+            </button>
+        </div>
+
+        <section id="soloSection">
+            <div class="form-card">
+                <h3>Buy a Solo Ticket</h3>
+                <p class="helper-text">Purchase a ticket 
+                instantly without a group. Perfect if you 
+                are going alone or your friends already 
+                have tickets.</p>
+                <div class="info-item">
+                    <label>Ticket Price:</label>
+                    <span id="soloTicketPrice">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <label>Tickets Available:</label>
+                    <span id="soloAvailableTickets">Loading...</span>
+                </div>
+                <button id="buySoloBtn" class="btn btn-primary"
+                    style="width:100%; margin-top:24px; 
+                    font-size:1.1rem; padding:18px;">
+                    Buy Ticket Now
+                </button>
+                <div id="soloTransactionStatus" 
+                    class="helper-text"
+                    style="margin-top:16px;"></div>
+            </div>
+        </section>
+
+        <section id="groupSection" class="hidden">
+            <section class="group-id-section">
+                <h3>Enter Group ID</h3>
+                <div class="group-id-form">
+                    <input type="number" id="groupIdInput" placeholder="Group ID" min="1">
+                    <button id="loadGroupBtn">Load Group</button>
+                </div>
+            </section>
+
+            <section id="groupDetails" class="group-details hidden">
+                <h3>Group Details</h3>
+                <div class="group-info">
+                    <div class="info-item">
+                        <label>Group ID:</label>
+                        <span id="displayGroupId"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Members Paid:</label>
+                        <span id="paidCount"></span> / <span id="totalMembers"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Time Remaining:</label>
+                        <span id="countdownTimer"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Ticket Price:</label>
+                        <span id="ticketPrice"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Tickets Available:</label>
+                        <span id="availableTicketsDisplay"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Group State:</label>
+                        <span id="groupState"></span>
+                    </div>
+                </div>
+
+                <div class="member-list">
+                    <h4>Members</h4>
+                    <ul id="memberList"></ul>
+                </div>
+            </section>
+
+            <section id="purchaseSection" class="purchase-section hidden">
+                <h3>Purchase Your Ticket</h3>
+                <div class="purchase-info">
+                    <div class="info-item">
+                        <label>Amount to Pay:</label>
+                        <span id="amountToPay"></span>
+                    </div>
+                    <button id="buyTicketBtn">Buy Ticket</button>
+                </div>
+                <div id="transactionStatus" class="transaction-status"></div>
+            </section>
+
+            <section id="successPanel" class="success-panel hidden">
+                <h3>Ticket Purchased Successfully!</h3>
+                <div class="success-content">
+                    <p id="successMessage"></p>
+                    <div class="info-item">
+                        <label>Your Ticket Balance:</label>
+                        <span id="ticketBalance"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Group Status:</label>
+                        <span id="finalGroupStatus"></span>
+                    </div>
+                    <p><a id="etherscanLink" href="#" target="_blank">View transaction on Etherscan</a></p>
+                </div>
+            </section>
+        </section>
+
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <script type="module" src="../js/buy.js"></script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchella - Never Miss Out Again</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html" class="active">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Festival ticketing, reimagined</p>
+                <h1>Never Miss Out Again</h1>
+                <p class="hero-text">Blockchella guarantees your entire group gets tickets or everyone gets refunded. No more going alone.</p>
+                <div class="hero-cta">
+                    <a href="/pages/get-started.html" class="btn btn-primary">Get Started</a>
+                    <a href="/pages/group.html" class="btn btn-secondary">Create Group</a>
+                </div>
+            </div>
+            <div class="hero-status-card">
+                <div class="status-card">
+                    <h3>Wallet Status</h3>
+                    <div class="status-pill status-disconnected" id="walletStatusPill">
+                        <span class="status-dot"></span>
+                        <span id="walletIndicator">Connect Wallet</span>
+                    </div>
+                    <div id="walletConnectedInfo" class="hidden" style="margin-top: 20px;">
+                        <div class="info-item" style="margin-bottom: 8px;">
+                            <label>Tickets</label>
+                            <span id="heroTicketBalance">—</span>
+                        </div>
+                        <div class="info-item" style="margin-bottom: 16px;">
+                            <label>Balance</label>
+                            <span id="heroSETHBalance">—</span>
+                        </div>
+                        <a href="/pages/balance.html" class="btn btn-secondary" style="width: 100%; font-size: 0.9rem;">View My Ticket →</a>
+                    </div>
+                    <p class="status-copy" id="walletStatusCopy">Connect MetaMask to manage groups, buy tickets, and track refunds.</p>
+                    <a href="/pages/get-started.html" class="btn btn-primary" id="walletGetStartedBtn" style="margin-top: 16px; width: 100%; text-align: center;">Get Started</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section how-it-works reveal">
+            <div class="section-header reveal">
+                <span class="section-label">How it Works</span>
+                <h2>Simple group ticketing in four steps</h2>
+            </div>
+            <div class="grid-grid reveal-stagger">
+                <article class="step-card reveal">
+                    <div class="step-number">1</div>
+                    <h3>Create a Group</h3>
+                    <p>Create a group and add your friends wallet addresses. Set a deadline for everyone to purchase.</p>
+                </article>
+                <article class="step-card reveal">
+                    <div class="step-number">2</div>
+                    <h3>Share Your Group ID</h3>
+                    <p>Share your unique Group ID with your friends so they can join.</p>
+                </article>
+                <article class="step-card reveal">
+                    <div class="step-number">3</div>
+                    <h3>Everyone Buys Together</h3>
+                    <p>Each friend pays for their ticket. SETH is held in escrow until the whole group has paid.</p>
+                </article>
+                <article class="step-card reveal">
+                    <div class="step-number">4</div>
+                    <h3>Tickets Released Simultaneously</h3>
+                    <p>Once everyone pays the tickets are released to all group members at the same time. If anyone misses the deadline everyone gets refunded.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section why-blockchain reveal">
+            <div class="section-header reveal">
+                <span class="section-label">Why Blockchain</span>
+                <h2>Built for fairness, transparency, and trust</h2>
+            </div>
+            <div class="feature-grid reveal-stagger">
+                <article class="feature-card reveal">
+                    <h3>Anti-scalping</h3>
+                    <p>Tickets can only be transferred back to the vendor, preventing resale abuse.</p>
+                </article>
+                <article class="feature-card reveal">
+                    <h3>Trustless</h3>
+                    <p>Smart contract rules are enforced automatically, with no middleman required.</p>
+                </article>
+                <article class="feature-card reveal">
+                    <h3>Transparent</h3>
+                    <p>All transactions are visible on Sepolia Etherscan for full auditability.</p>
+                </article>
+                <article class="feature-card reveal">
+                    <h3>Group Guarantee</h3>
+                    <p>All-or-nothing ticket distribution ensures nobody is left behind.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <p>Contract address:</p>
+            <p class="contract-address">0xbB4429408330b4e18Ad8ada91ECE37E0cFC45b62</p>
+        </div>
+        <div>
+            <a href="https://sepolia.etherscan.io/address/0xbB4429408330b4e18Ad8ada91ECE37E0cFC45b62" target="_blank">View on Sepolia Etherscan</a>
+            <p>Built on Ethereum Sepolia Testnet</p>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+    <script type="module">
+        import { ethers } from "https://esm.sh/ethers@6.7.0";
+        import { CONTRACT_ADDRESS } from "../js/contract.js";
+
+        const pill = document.getElementById('walletStatusPill');
+        const indicator = document.getElementById('walletIndicator');
+        const connectedInfo = document.getElementById('walletConnectedInfo');
+        const statusCopy = document.getElementById('walletStatusCopy');
+        const getStartedBtn = document.getElementById('walletGetStartedBtn');
+
+        const BALANCE_ABI = [
+            { "type": "function", "name": "balanceOf", "inputs": [{ "type": "address", "name": "account" }], "outputs": [{ "type": "uint256" }], "stateMutability": "view" }
+        ];
+
+        async function setConnected(address, provider) {
+            pill.classList.add('status-connected');
+            pill.classList.remove('status-disconnected');
+            indicator.textContent = address.slice(0, 6) + '...' + address.slice(-4);
+            statusCopy.classList.add('hidden');
+            getStartedBtn.classList.add('hidden');
+            try {
+                const contract = new ethers.Contract(CONTRACT_ADDRESS, BALANCE_ABI, provider);
+                const [ticketBal, sethBal] = await Promise.all([
+                    contract.balanceOf(address),
+                    provider.getBalance(address)
+                ]);
+                document.getElementById('heroTicketBalance').textContent = ticketBal.toString();
+                document.getElementById('heroSETHBalance').textContent =
+                    parseFloat(ethers.formatEther(sethBal)).toFixed(4) + ' SETH';
+                connectedInfo.classList.remove('hidden');
+            } catch (e) {
+                console.warn('Could not fetch wallet stats:', e);
+            }
+        }
+
+        function setDisconnected() {
+            pill.classList.remove('status-connected');
+            pill.classList.add('status-disconnected');
+            indicator.textContent = 'Connect Wallet';
+            connectedInfo.classList.add('hidden');
+            statusCopy.classList.remove('hidden');
+            getStartedBtn.classList.remove('hidden');
+        }
+
+        async function checkWallet() {
+            if (!window.ethereum) return;
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts && accounts.length > 0) {
+                    const provider = new ethers.BrowserProvider(window.ethereum);
+                    const network = await provider.getNetwork();
+                    if (network.chainId === 11155111n) {
+                        await setConnected(accounts[0], provider);
+                    } else {
+                        setDisconnected();
+                    }
+                } else {
+                    setDisconnected();
+                }
+            } catch { setDisconnected(); }
+        }
+
+        checkWallet();
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', checkWallet);
+            window.ethereum.on('chainChanged', checkWallet);
+        }
+    </script>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const hero = document.querySelector('.hero');
+            if (hero) hero.style.backgroundPositionY = `${scrolled * 0.3}px`;
+        }, { passive: true });
+    </script>
+</body>
+</html>

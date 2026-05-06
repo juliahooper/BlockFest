@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx hardhat:*)",
+      "Bash(ls node_modules/.bin/solc*)",
+      "Bash(npx solc@0.8.20 --version)",
+      "Bash(npx solc@0.8.20 --base-path . --include-path node_modules contracts/BlockFest.sol)",
+      "Bash(npx solc@0.8.20 --base-path . --include-path node_modules/ @openzeppelin/contracts/utils/ReentrancyGuard.sol contracts/BlockFest.sol)",
+      "Bash(npx --yes solc@0.8.20 -- --base-path . --include-path node_modules/ contracts/BlockFest.sol)",
+      "Bash(npx --yes solc@0.8.20 -- --base-path . --include-path node_modules/ --bin contracts/BlockFest.sol)",
+      "Bash(node -e \"const solc = require\\('./node_modules/solc'\\); console.log\\(solc.version\\(\\)\\)\")",
+      "Bash(npm list:*)",
+      "Bash(node -e ':*)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\user\\\\BlockFest\\\\BlockFest\\\\.claude\\\\\" -Force)"
+    ]
+  }
+}

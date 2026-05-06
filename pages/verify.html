@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Verification - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="landing.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+        </div>
+    </nav>
+
+    <main>
+
+        <div class="verify-header">
+            <h1>Ticket Verification</h1>
+            <p>Enter a wallet address to verify ticket ownership at the door</p>
+        </div>
+
+        <div class="form-card verify-card">
+            <input type="text" id="verifyAddress" placeholder="Enter wallet address 0x..." style="margin-bottom: 12px;">
+            <button id="verifyBtn" class="btn btn-primary" style="width: 100%;">Verify Ticket</button>
+
+            <div id="verificationResult" class="hidden" style="margin-top: 40px; text-align: center;">
+                <div id="validityIndicator"></div>
+                <p style="color: var(--color-text-muted); margin-top: 16px; margin-bottom: 0;">
+                    Ticket balance: <strong id="ticketBalance"></strong>
+                </p>
+            </div>
+        </div>
+
+        <div id="messageArea" class="message-area"></div>
+
+    </main>
+
+    <script type="module" src="../js/verify.js"></script>
+</body>
+</html>

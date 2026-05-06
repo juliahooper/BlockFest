@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Ticket Status - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html" class="active">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <a href="/pages/index.html" class="back-link">← Back to Home</a>
+        <h2>My Ticket Status</h2>
+
+        <!-- Attendee Section -->
+        <section id="attendeeSection" class="role-section">
+            <button id="connectAttendeeBtn" class="btn btn-primary">Connect MetaMask</button>
+            <div id="attendeeInfo" class="hidden">
+                <div class="info-item">
+                    <label>Connected Address:</label>
+                    <span id="attendeeAddress"></span>
+                </div>
+                <div class="info-item">
+                    <label>Ticket Status:</label>
+                    <div id="ticketStatus" class="status-indicator"></div>
+                </div>
+                <div class="info-item">
+                    <label>SETH Balance:</label>
+                    <span id="sethBalance"></span>
+                </div>
+                <div id="groupStatus" class="group-info hidden">
+                    <h4>Group Status</h4>
+                    <div class="info-item">
+                        <label>Group ID:</label>
+                        <span id="groupId"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Members Paid:</label>
+                        <span id="paidCount"></span> / <span id="totalMembers"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Time Remaining:</label>
+                        <span id="countdownTimer"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Group Status:</label>
+                        <span id="groupState"></span>
+                    </div>
+                </div>
+                <button id="refreshAttendeeBtn" class="btn btn-secondary">Refresh</button>
+                <div id="realTimeIndicator" class="real-time-indicator">Real-time updates active</div>
+            </div>
+        </section>
+
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <script type="module" src="../js/balance.js"></script>
+</body>
+</html>

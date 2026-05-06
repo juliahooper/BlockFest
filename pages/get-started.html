@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html" class="active">Get Started</a></li>
+                <li><a href="/pages/group.html">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="get-started-header">
+            <h2>Get Started with Blockchella</h2>
+            <p class="hero-text">Connect your MetaMask wallet to start creating groups, buying tickets, and tracking refunds.</p>
+        </div>
+
+        <!-- Connect Panel -->
+        <div id="connectPanel" class="connect-section">
+            <div class="info-card">
+                <h3>Connect Your Wallet</h3>
+                <p>Blockchella uses MetaMask to interact with the Ethereum Sepolia testnet. Connect your wallet to get started.</p>
+                <button id="connectBtn" class="btn btn-primary btn-connect">Connect MetaMask</button>
+            </div>
+        </div>
+
+        <!-- Error: MetaMask not installed -->
+        <div id="errorNoMetaMask" class="info-card error-amber hidden">
+            <h3>MetaMask Not Found</h3>
+            <p>MetaMask is required to use Blockchella. Install the MetaMask browser extension and refresh this page.</p>
+            <div class="success-actions">
+                <a href="https://metamask.io/download/" target="_blank" class="btn btn-primary">Install MetaMask</a>
+                <button id="tryAgainNoMetaMask" class="btn btn-secondary">Try Again</button>
+            </div>
+        </div>
+
+        <!-- Error: Wrong Network -->
+        <div id="errorWrongNetwork" class="info-card error-amber hidden">
+            <h3>Wrong Network</h3>
+            <p>Blockchella runs on the Ethereum Sepolia testnet. You're connected to a different network.</p>
+            <div class="success-actions">
+                <button id="switchSepoliaBtn" class="btn btn-primary">Switch to Sepolia</button>
+                <button id="tryAgainWrongNetwork" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Error: Connection Rejected -->
+        <div id="errorRejected" class="info-card error-muted hidden">
+            <h3>Connection Cancelled</h3>
+            <p>You cancelled the MetaMask connection. Click below when you're ready to try again.</p>
+            <button id="tryAgainRejected" class="btn btn-primary">Try Again</button>
+        </div>
+
+        <!-- Error: Generic -->
+        <div id="errorGeneric" class="info-card error-muted hidden">
+            <h3>Something Went Wrong</h3>
+            <p id="errorGenericMessage">An unexpected error occurred.</p>
+            <button id="tryAgainGeneric" class="btn btn-primary">Try Again</button>
+        </div>
+
+        <!-- Success Panel -->
+        <div id="successPanel" class="info-card hidden"></div>
+
+        <hr class="section-divider">
+
+        <!-- Secondary: wallet creation -->
+        <div class="secondary-section">
+            <p>Don't have a MetaMask wallet yet?</p>
+            <a href="/pages/wallet.html" class="text-link">Create a new wallet →</a>
+        </div>
+
+        <!-- How-to Steps -->
+        <div class="how-to-section">
+            <h3>How to get started</h3>
+            <ol class="how-to-steps">
+                <li>
+                    <strong>Install MetaMask</strong>
+                    <span>Add the MetaMask browser extension from metamask.io and create or import a wallet.</span>
+                </li>
+                <li>
+                    <strong>Get Sepolia ETH</strong>
+                    <span>Use a Sepolia faucet to get free testnet ETH — you'll need it to pay for tickets and gas.</span>
+                </li>
+                <li>
+                    <strong>Create or Join a Group</strong>
+                    <span>Create a group with your friends or join an existing one using a Group ID.</span>
+                </li>
+            </ol>
+        </div>
+
+        <div id="messageArea" class="message-area"></div>
+    </main>
+
+    <script type="module" src="../js/get-started.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Group - Blockchella</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="group-page">
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="index.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="/pages/home.html">Home</a></li>
+                <li><a href="/pages/get-started.html">Get Started</a></li>
+                <li><a href="/pages/group.html" class="active">Create Group</a></li>
+                <li><a href="/pages/buy.html">Buy Ticket</a></li>
+                <li><a href="/pages/balance.html">My Ticket</a></li>
+                <li><a href="/pages/return.html">Return Ticket</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- Section 1 — Hero header -->
+        <section class="group-hero">
+            <p class="eyebrow">Group Ticketing</p>
+            <h1 class="group-hero-title">Create Your Group</h1>
+            <p class="group-hero-sub">Guarantee your crew gets in. Together.</p>
+            <div class="group-stats-row">
+                <div class="group-stat-pill">
+                    <span class="stat-label">Ticket Price</span>
+                    <strong id="ticketPriceDisplay">Loading…</strong>
+                </div>
+                <div class="group-stat-pill">
+                    <span class="stat-label">Tickets Available</span>
+                    <strong id="availableTicketsDisplay">Loading…</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 — Why group ticketing explainer -->
+        <section class="section">
+            <div class="section-header reveal">
+                <span class="section-label">Why Group Ticketing</span>
+                <h2>No more going alone</h2>
+            </div>
+            <div class="feature-grid why-grid reveal-stagger">
+                <div class="feature-card reveal">
+                    <div class="step-number">✗</div>
+                    <h3>Going Alone Sucks</h3>
+                    <p>Traditional ticketing has no way to guarantee your whole group gets in. One person misses out and suddenly nobody wants to go.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="step-number">⬡</div>
+                    <h3>Group Escrow</h3>
+                    <p>Your SETH is held in escrow until everyone in your group has paid. Nobody gets their ticket until the whole group commits.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="step-number">✓</div>
+                    <h3>All or Nothing</h3>
+                    <p>If anyone misses the deadline the smart contract automatically refunds everyone. Zero risk, zero trust required.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3 — Connection status bar -->
+        <div id="connectionStatus" class="status-bar">
+            <div class="status-pill" id="statusPill">
+                <span class="status-dot"></span>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <button id="connectWalletBtn" class="btn btn-primary">Connect MetaMask</button>
+        </div>
+
+        <!-- Section 4 — Group creation form -->
+        <div class="form-card reveal">
+            <form id="groupForm">
+
+                <!-- Ticket info row -->
+                <div class="ticket-info-row">
+                    <div class="group-stat-pill">
+                        <span class="stat-label">Ticket Price</span>
+                        <strong id="formTicketPrice">Loading…</strong>
+                    </div>
+                    <div class="group-stat-pill">
+                        <span class="stat-label">Tickets Available</span>
+                        <strong id="formAvailableTickets">Loading…</strong>
+                    </div>
+                </div>
+
+                <!-- Friend address inputs -->
+                <div style="margin-top: 32px;">
+                    <label class="form-label">Friend Addresses</label>
+                    <p class="helper-text" style="margin-top: 0; margin-bottom: 16px;">Add up to 3 friends — 4 total including you</p>
+                    <div id="friendsContainer">
+                        <div class="friend-field">
+                            <input type="text" placeholder="Friend's wallet address (0x…)" class="friend-input">
+                            <button type="button" class="remove-friend-btn" style="display: none;">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addFriendBtn" class="btn btn-secondary" style="width: 100%; margin-top: 12px;">+ Add Friend</button>
+                </div>
+
+                <!-- Deadline input -->
+                <div style="margin-top: 28px;">
+                    <label class="form-label" for="deadlineHours">Deadline (hours)</label>
+                    <input type="number" id="deadlineHours" min="1" max="168" value="48" required>
+                    <p class="helper-text">Between 1 and 168 hours. We recommend 48 hours to give your group enough time.</p>
+                </div>
+
+                <!-- Total cost display -->
+                <div class="total-cost-display">
+                    <p style="margin: 0 0 8px; color: var(--color-text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Total Cost</p>
+                    <div class="cost-amount" id="totalCostDisplay">0.0000 SETH</div>
+                    <p style="margin: 8px 0 0; color: var(--color-text-muted); font-size: 0.85rem;">Held in escrow until all members pay</p>
+                </div>
+
+                <!-- Create group button -->
+                <button type="button" id="createGroupBtn" class="btn btn-primary" disabled
+                    style="width: 100%; font-size: 1.1rem; padding: 18px; border-radius: 16px;">
+                    Create Group
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Section 5 — Success panel -->
+        <section id="successPanel" class="success-panel hidden">
+            <div class="success-icon">✓</div>
+            <h2 style="margin: 0;">Group Created!</h2>
+            <p style="color: var(--color-text-muted); margin: 0;">Your group has been created on-chain.</p>
+            <div class="group-id-pill"><span id="createdGroupId"></span></div>
+            <p style="color: var(--color-text-muted); margin: 0;">Share this ID with your friends so they can join.</p>
+            <div class="success-actions">
+                <a id="buyTicketLink" href="#" class="btn btn-primary">Buy Your Ticket</a>
+                <a id="etherscanLink" href="#" target="_blank" class="btn btn-secondary">View on Etherscan</a>
+            </div>
+        </section>
+
+        <div id="messageArea" class="message-area"></div>
+
+    </main>
+
+    <script type="module" src="../js/group.js"></script>
+    <script>
+        // Scroll reveal
+        const revealObserver = new IntersectionObserver(
+            (entries) => entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObserver.unobserve(e.target);
+                }
+            }),
+            { threshold: 0.1 }
+        );
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Status dot: reflect wallet connection state
+        const statusTextEl = document.getElementById('statusText');
+        const statusPillEl = document.getElementById('statusPill');
+        if (statusTextEl && statusPillEl) {
+            const updateDot = () => {
+                statusPillEl.classList.toggle(
+                    'status-connected',
+                    statusTextEl.textContent.startsWith('Connected')
+                );
+            };
+            new MutationObserver(updateDot).observe(
+                statusTextEl, { childList: true, characterData: true, subtree: true }
+            );
+        }
+
+        // Sync hero stat pills → form info pills
+        const syncPills = () => {
+            const price = document.getElementById('ticketPriceDisplay');
+            const avail = document.getElementById('availableTicketsDisplay');
+            const fp = document.getElementById('formTicketPrice');
+            const fa = document.getElementById('formAvailableTickets');
+            if (price && fp) fp.textContent = price.textContent;
+            if (avail && fa) fa.textContent = avail.textContent;
+        };
+        const _price = document.getElementById('ticketPriceDisplay');
+        const _avail = document.getElementById('availableTicketsDisplay');
+        const pillObs = new MutationObserver(syncPills);
+        if (_price) pillObs.observe(_price, { childList: true, characterData: true, subtree: true });
+        if (_avail) pillObs.observe(_avail, { childList: true, characterData: true, subtree: true });
+
+        // Loading spinner: add btn-loading when createGroupBtn text changes to "Creating…"
+        const createBtnEl = document.getElementById('createGroupBtn');
+        if (createBtnEl) {
+            new MutationObserver(() => {
+                createBtnEl.classList.toggle(
+                    'btn-loading',
+                    createBtnEl.textContent.includes('Creating')
+                );
+            }).observe(createBtnEl, { childList: true, characterData: true, subtree: true });
+        }
+    </script>
+</body>
+</html>
