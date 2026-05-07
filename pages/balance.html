@@ -33,39 +33,41 @@
         <section id="attendeeSection" class="role-section">
             <button id="connectAttendeeBtn" class="btn btn-primary">Connect MetaMask</button>
             <div id="attendeeInfo" class="hidden">
-                <div class="info-item">
-                    <label>Connected Address:</label>
-                    <span id="attendeeAddress"></span>
-                </div>
-                <div class="info-item">
-                    <label>Ticket Status:</label>
-                    <div id="ticketStatus" class="status-indicator"></div>
-                </div>
-                <div class="info-item">
-                    <label>SETH Balance:</label>
-                    <span id="sethBalance"></span>
-                </div>
-                <div id="groupStatus" class="group-info hidden">
-                    <h4>Group Status</h4>
+                <div class="form-card">
                     <div class="info-item">
-                        <label>Group ID:</label>
-                        <span id="groupId"></span>
+                        <label>Connected Address:</label>
+                        <span id="attendeeAddress"></span>
                     </div>
                     <div class="info-item">
-                        <label>Members Paid:</label>
-                        <span id="paidCount"></span> / <span id="totalMembers"></span>
+                        <label>Ticket Status:</label>
+                        <div id="ticketStatus" class="status-indicator invalid"></div>
                     </div>
                     <div class="info-item">
-                        <label>Time Remaining:</label>
-                        <span id="countdownTimer"></span>
+                        <label>SETH Balance:</label>
+                        <span id="sethBalance"></span>
                     </div>
-                    <div class="info-item">
-                        <label>Group Status:</label>
-                        <span id="groupState"></span>
+                    <div id="groupStatus" class="group-info hidden">
+                        <h4>Group Status</h4>
+                        <div class="info-item">
+                            <label>Group ID:</label>
+                            <span id="groupId"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Members Paid:</label>
+                            <span id="paidCount"></span> / <span id="totalMembers"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Time Remaining:</label>
+                            <span id="countdownTimer"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Group Status:</label>
+                            <span id="groupState"></span>
+                        </div>
                     </div>
+                    <button id="refreshAttendeeBtn" class="btn btn-secondary">Refresh</button>
+                    <div id="realTimeIndicator" class="helper-text">Real-time updates active</div>
                 </div>
-                <button id="refreshAttendeeBtn" class="btn btn-secondary">Refresh</button>
-                <div id="realTimeIndicator" class="real-time-indicator">Real-time updates active</div>
             </div>
         </section>
 

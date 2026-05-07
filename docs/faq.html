@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html">🏠 Home</a>
+            <a href="getting-started.html">🚀 Getting Started</a>
+            <a href="smart-contract.html">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html">⛓ On-Chain Blockchain</a>
+            <a href="pages.html">🖥 Frontend Pages</a>
+            <a href="faq.html" class="active">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">FAQ</p>
+            <h1>Frequently Asked Questions</h1>
+            <p>Plain English answers to common questions about Blockchella.</p>
+
+            <div style="display:flex; flex-direction:column; gap:2px; margin-top:8px;">
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        What is Sepolia testnet?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Sepolia is a copy of Ethereum used for testing. It behaves identically to the real Ethereum network,
+                        but the ETH on it (called SETH or Sepolia ETH) has no monetary value and is free to obtain from faucets.
+                        Developers use testnets to build and test applications without spending real money.
+                        Blockchella runs on Sepolia so you can try it risk-free.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        What is SETH?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        SETH stands for Sepolia ETH — the native currency of the Sepolia testnet. It works exactly like ETH
+                        but is worthless outside the testnet. You use SETH to pay for ticket prices and gas fees on Blockchella.
+                        You can get free SETH from faucets like sepoliafaucet.com.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        Why do I need MetaMask?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Blockchella has no user accounts, no passwords, and no central server storing your data.
+                        Instead, your Ethereum wallet (MetaMask) is your identity. When you buy a ticket, the
+                        transaction is signed by your wallet's private key and recorded permanently on-chain.
+                        MetaMask also holds your SETH so you can pay for tickets and gas fees.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        What happens if my group deadline expires?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        If not all group members have paid when the deadline passes, the group is considered
+                        failed. Anyone can call <code>refundGroup(groupId)</code> to trigger the cleanup.
+                        Everyone who paid into escrow gets their full ticket price back automatically.
+                        Reserved tickets are released back to the available pool.
+                        Note: gas fees from the original payment transactions are not refunded by the contract —
+                        those are consumed by the Ethereum network.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        Can I scalp or resell my ticket?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        No. The smart contract enforces that ticket tokens can only be transferred back to
+                        the venue (contract owner). You cannot send your ticket to another wallet or sell
+                        it on a marketplace. The only option is to return it for a full refund via the
+                        Return Ticket page. This anti-scalping mechanism is enforced at the code level —
+                        no company needs to police it.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        What is a smart contract?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        A smart contract is a program that runs on a blockchain. Once deployed, its code
+                        cannot be changed (unless it was specifically built to be upgradeable, which Blockchella
+                        is not). It runs automatically when someone sends it a transaction, and the rules it
+                        enforces cannot be overridden by anyone — not even the contract's creator.
+                        Think of it as a vending machine: put in the right input, get the guaranteed output.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        Why does my transaction cost gas?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Gas is a fee paid to Ethereum validators for processing and storing your transaction.
+                        Every operation on Ethereum — reading state, writing state, doing arithmetic — costs
+                        a small amount of gas. On Sepolia, gas is paid in SETH (worthless test funds), so
+                        it costs nothing in real money. On mainnet it would cost real ETH.
+                        The gas fee goes to network validators, not to Blockchella.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        What is the Blockchella chain?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Blockchella builds its own mini-blockchain inside the smart contract. Every time a
+                        group successfully completes, a new "block" is appended to this internal chain,
+                        recording the group ID, member addresses, ticket count, and a hash linking it to
+                        the previous block. This creates a tamper-evident audit trail of all completed
+                        ticket groups — a blockchain running on top of Ethereum.
+                        See the <a href="blockchain-chain.html" class="docs-nav-link" style="display:inline-flex; font-size:0.85rem;">On-Chain Blockchain</a> doc for details.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        How do I verify my ticket at the door?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Door staff use the Verify page (<code>verify.html</code>) to check ticket ownership.
+                        As an attendee, you show your wallet address (visible in MetaMask) to the doorman.
+                        They enter it on the Verify page, and the contract is queried to confirm whether that
+                        address holds a ticket token. No QR codes, no paper tickets — your wallet is your ticket.
+                    </p>
+                </details>
+
+                <details style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px; cursor:pointer; margin-bottom:8px;">
+                    <summary style="font-weight:700; font-size:1rem; color:var(--color-text); list-style:none; display:flex; justify-content:space-between; align-items:center;">
+                        Can I return my ticket?
+                        <span style="color:var(--color-accent); font-size:1.2rem;">+</span>
+                    </summary>
+                    <p style="margin-top:14px; margin-bottom:0;">
+                        Yes. Any ticket holder can return their ticket at any time using the Return Ticket page.
+                        The ticket token is burned and the full ticket price is refunded in SETH to your wallet.
+                        Gas fees are not refunded. Once returned, the ticket count returns to the available
+                        pool and someone else can buy it.
+                    </p>
+                </details>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

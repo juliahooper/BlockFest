@@ -328,7 +328,6 @@ contract BlockFest is ReentrancyGuard {
             availableTickets() >= members.length + 1,
             "Not enough tickets available for this group size"
         );
-        require(members.length >= 1, "Group must have at least one other member");
         require(members.length + 1 <= MAX_GROUP_SIZE, "Group size exceeds maximum of 4 including creator");
         require(deadlineHours >= 1, "Deadline must be at least 1 hour");
         require(deadlineHours <= 168, "Deadline cannot exceed 168 hours");

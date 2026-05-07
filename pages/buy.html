@@ -26,19 +26,32 @@
     </nav>
 
     <main>
-        <h2>Buy Your Ticket</h2>
+        <div class="page-hero">
+            <h2 class="page-title">Buy Your Ticket</h2>
+            <p class="page-subtitle">
+                Your group is waiting. Secure your spot.
+            </p>
+        </div>
 
-        <div id="connectionStatus" class="connection-status">
-            <span id="statusText">Not Connected</span>
-            <button id="connectWalletBtn">Connect MetaMask</button>
+        <div id="connectionStatus" class="status-bar">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <button id="connectWalletBtn"
+                class="btn btn-primary">
+                Connect MetaMask
+            </button>
         </div>
 
         <div class="purchase-toggle">
-            <button id="soloToggle" class="toggle-btn active">
-                Buy Solo
+            <button id="soloToggle"
+                class="toggle-btn active">
+                🎟 Buy Solo
             </button>
-            <button id="groupToggle" class="toggle-btn">
-                Join a Group
+            <button id="groupToggle"
+                class="toggle-btn">
+                👥 Join a Group
             </button>
         </div>
 
@@ -69,13 +82,20 @@
         </section>
 
         <section id="groupSection" class="hidden">
-            <section class="group-id-section">
-                <h3>Enter Group ID</h3>
-                <div class="group-id-form">
-                    <input type="number" id="groupIdInput" placeholder="Group ID" min="1">
-                    <button id="loadGroupBtn">Load Group</button>
+            <div class="form-card">
+                <h3>Enter Your Group ID</h3>
+                <p class="helper-text">
+                    Your group creator shared a Group ID with you. Enter it below to view
+                    group details and purchase your ticket.
+                </p>
+                <div style="display:flex; gap:12px; align-items:center; margin-top:20px;">
+                    <input type="number" id="groupIdInput" placeholder="Group ID" min="1"
+                        style="flex:1; margin-bottom:0;">
+                    <button id="loadGroupBtn" class="btn btn-primary">
+                        Load Group
+                    </button>
                 </div>
-            </section>
+            </div>
 
             <section id="groupDetails" class="group-details hidden">
                 <h3>Group Details</h3>

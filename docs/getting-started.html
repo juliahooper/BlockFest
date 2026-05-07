@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html">🏠 Home</a>
+            <a href="getting-started.html" class="active">🚀 Getting Started</a>
+            <a href="smart-contract.html">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html">⛓ On-Chain Blockchain</a>
+            <a href="pages.html">🖥 Frontend Pages</a>
+            <a href="faq.html">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">Getting Started</p>
+            <h1>Your First Steps</h1>
+            <p>
+                Blockchella runs on the Ethereum Sepolia testnet. You don't need real money —
+                everything uses SETH (Sepolia ETH), which is free to obtain. Before you can buy
+                a ticket or join a group, you need three things: a wallet, the right network, and some SETH.
+            </p>
+
+            <h2>Prerequisites</h2>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:8px;">
+                <div style="display:flex; gap:16px; align-items:flex-start; padding:16px 20px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px;">
+                    <div style="font-size:1.4rem;">🦊</div>
+                    <div>
+                        <div style="font-weight:700; margin-bottom:4px;">MetaMask Browser Extension</div>
+                        <div style="font-size:0.9rem; color:var(--color-text-muted);">A browser-based Ethereum wallet. Available for Chrome, Firefox, Brave, and Edge.</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:16px; align-items:flex-start; padding:16px 20px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px;">
+                    <div style="font-size:1.4rem;">🌐</div>
+                    <div>
+                        <div style="font-weight:700; margin-bottom:4px;">Sepolia Testnet</div>
+                        <div style="font-size:0.9rem; color:var(--color-text-muted);">Blockchella is deployed on Ethereum Sepolia — a test network where transactions use free test ETH instead of real money.</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:16px; align-items:flex-start; padding:16px 20px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:14px;">
+                    <div style="font-size:1.4rem;">💧</div>
+                    <div>
+                        <div style="font-weight:700; margin-bottom:4px;">Sepolia ETH (SETH)</div>
+                        <div style="font-size:0.9rem; color:var(--color-text-muted);">Free test funds available from faucets. You need SETH to pay for tickets and gas fees.</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Step 1 — Install MetaMask</h2>
+            <p>
+                Go to <a href="https://metamask.io" target="_blank" class="docs-nav-link" style="display:inline-flex;">metamask.io ↗</a>
+                and install the browser extension. Once installed, follow the setup wizard to create a new wallet.
+                Write down your secret recovery phrase and store it somewhere safe — this is the only way to recover
+                your wallet if you lose access.
+            </p>
+            <div class="warning" style="border-radius:14px; padding:14px 18px; font-size:0.9rem; margin:16px 0;">
+                ⚠️ Never share your secret recovery phrase with anyone. Blockchella will never ask for it.
+            </div>
+
+            <h2>Step 2 — Switch to Sepolia</h2>
+            <p>
+                By default MetaMask connects to Ethereum Mainnet (real money). You need to switch to Sepolia testnet.
+                Blockchella will attempt to switch you automatically when you connect, but you can also do it manually:
+            </p>
+            <ol style="color:var(--color-text-muted); line-height:2; padding-left:24px;">
+                <li>Open MetaMask and click the network dropdown at the top</li>
+                <li>Click <strong style="color:var(--color-text);">Show test networks</strong> if Sepolia is not visible</li>
+                <li>Select <strong style="color:var(--color-text);">Sepolia test network</strong></li>
+            </ol>
+
+            <h2>Step 3 — Get SETH from a Faucet</h2>
+            <p>
+                A faucet is a website that sends you free test ETH. Copy your MetaMask wallet address
+                (click your account name at the top of MetaMask) and paste it into one of these:
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 16px;">
+                <a href="https://sepoliafaucet.com" target="_blank" class="docs-nav-link">Sepolia Faucet ↗</a>
+                <a href="https://faucet.sepolia.dev" target="_blank" class="docs-nav-link">Alchemy Sepolia Faucet ↗</a>
+                <a href="https://www.infura.io/faucet/sepolia" target="_blank" class="docs-nav-link">Infura Faucet ↗</a>
+            </div>
+            <p>
+                It usually takes 30–60 seconds for SETH to arrive in your wallet. You only need a small
+                amount — each ticket costs a fixed amount of SETH set at contract deployment, plus a tiny
+                gas fee for the transaction.
+            </p>
+
+            <h2>Step 4 — Choose Your Role</h2>
+            <p>
+                Open the <a href="../pages/landing.html" class="docs-nav-link" style="display:inline-flex;">Blockchella app ↗</a>
+                and pick your role on the landing page:
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px; margin:16px 0;">
+                <div style="padding:14px 18px; background:rgba(124,58,237,0.06); border:1px solid rgba(124,58,237,0.2); border-radius:12px;">
+                    <strong>🎟 I'm Attending</strong> — Buy tickets, join groups, check your ticket status, return tickets.
+                </div>
+                <div style="padding:14px 18px; background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.2); border-radius:12px;">
+                    <strong>🚪 I'm at the Door</strong> — Verify ticket holders by scanning their wallet address at the venue entrance.
+                </div>
+                <div style="padding:14px 18px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.2); border-radius:12px;">
+                    <strong>🏟 I'm the Venue</strong> — Admin panel for the contract owner. Monitor sales, view all groups, withdraw funds.
+                </div>
+            </div>
+
+            <h2>Step 5 — Connect Your Wallet</h2>
+            <p>
+                On any attendee page, click <strong>Connect MetaMask</strong>. MetaMask will pop up and
+                ask you to approve the connection. Once connected, the status bar at the top of the page
+                will show your shortened wallet address and a green indicator.
+            </p>
+            <p>
+                If you're on the wrong network, Blockchella will automatically ask MetaMask to switch
+                to Sepolia. Approve the network switch when prompted.
+            </p>
+
+            <h2>Common Setup Issues</h2>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="padding:16px 20px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">"MetaMask not detected"</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">The MetaMask extension is not installed, or you're using a browser that doesn't support it. Install MetaMask from metamask.io and reload the page.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">"Wrong network — please switch to Sepolia"</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">MetaMask is connected to a different network (e.g. Ethereum Mainnet). Click the network prompt or manually switch to Sepolia in MetaMask.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Transaction keeps failing</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">You may not have enough SETH to cover the ticket price plus gas. Get more SETH from a faucet and try again.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Page shows "Loading..." and never updates</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">The read-only RPC provider may be rate-limited. Refresh the page, or connect MetaMask to use your own provider.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

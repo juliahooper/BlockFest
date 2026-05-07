@@ -10,7 +10,7 @@ import { ethers } from "https://esm.sh/ethers@6.7.0";
  * The deployed address of the BlockFest smart contract on Ethereum Sepolia testnet.
  * This is the central point of contact for all frontend interactions with the contract.
  */
-export const CONTRACT_ADDRESS = "0xbB4429408330b4e18Ad8ada91ECE37E0cFC45b62";
+export const CONTRACT_ADDRESS = "0x7454E732730346FDF8310Fef1850c96606cB8D7b";
 
 /**
  * @constant {Array} CONTRACT_ABI

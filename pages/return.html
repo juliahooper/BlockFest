@@ -28,32 +28,55 @@
 
     <!-- Main Content -->
     <main class="container">
-        <h2>Return Your Ticket</h2>
+        <div class="page-hero">
+            <h2 class="page-title">Return Your Ticket</h2>
+            <p class="page-subtitle">
+                Changed your mind? Return your ticket and get your SETH back.
+            </p>
+        </div>
 
         <!-- MetaMask Connection Status -->
         <div id="connectionStatus" class="status-bar">
-            <span id="statusText">Not Connected</span>
-            <button id="connectWalletBtn">Connect MetaMask</button>
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <button id="connectWalletBtn" class="btn btn-primary">
+                Connect MetaMask
+            </button>
         </div>
 
         <!-- Pre-Return Information Section -->
         <div id="preReturnSection" class="section hidden">
-            <h3>Ticket Return Information</h3>
-            <div class="balance-info">
-                <p><strong>Current Ticket Balance:</strong> <span id="currentTicketBalance">Loading...</span></p>
-                <p><strong>Current SETH Balance:</strong> <span id="currentSETHBalance">Loading...</span></p>
-                <p><strong>Refund Amount:</strong> <span id="refundAmount">Loading...</span></p>
+            <div class="form-card">
+                <h3>Ticket Return Information</h3>
+                <div class="info-item">
+                    <label>Current Ticket Balance:</label>
+                    <span id="currentTicketBalance">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <label>Current SETH Balance:</label>
+                    <span id="currentSETHBalance">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <label>Refund Amount:</label>
+                    <span id="refundAmount">Loading...</span>
+                </div>
+                <p class="helper-text">
+                    Returning your ticket will burn your ticket token permanently
+                    and refund the ticket price to your wallet.
+                </p>
+                <div class="confirmation">
+                    <label>
+                        <input type="checkbox" id="confirmationCheckbox">
+                        I understand that returning my ticket is permanent and cannot be undone
+                    </label>
+                </div>
+                <button id="returnTicketBtn" class="btn btn-primary"
+                    style="width:100%; margin-top:24px;" disabled>
+                    Return Ticket
+                </button>
             </div>
-            <div class="refund-policy">
-                <p><em>Returning your ticket will burn your ticket token permanently and refund the ticket price to your wallet.</em></p>
-            </div>
-            <div class="confirmation">
-                <label>
-                    <input type="checkbox" id="confirmationCheckbox">
-                    I understand that returning my ticket is permanent and cannot be undone
-                </label>
-            </div>
-            <button id="returnTicketBtn" disabled>Return Ticket</button>
         </div>
 
         <!-- Transaction Status Area -->
@@ -74,11 +97,20 @@
 
         <!-- Unclaimed Refund Section -->
         <div id="unclaimedRefundSection" class="section">
-            <h3>Unclaimed Refunds</h3>
-            <button id="checkUnclaimedBtn">Check for Unclaimed Refunds</button>
-            <div id="unclaimedInfo" class="hidden">
-                <p><strong>Unclaimed Refund Amount:</strong> <span id="unclaimedAmount">0</span></p>
-                <button id="claimRefundBtn" class="hidden">Claim Refund</button>
+            <div class="form-card" style="margin-top:32px;">
+                <h3>Unclaimed Refunds</h3>
+                <button id="checkUnclaimedBtn" class="btn btn-secondary">
+                    Check for Unclaimed Refunds
+                </button>
+                <div id="unclaimedInfo" class="hidden">
+                    <div class="info-item">
+                        <label>Unclaimed Refund Amount:</label>
+                        <span id="unclaimedAmount">0</span>
+                    </div>
+                    <button id="claimRefundBtn" class="btn btn-primary hidden">
+                        Claim Refund
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -89,5 +121,4 @@
     <!-- Import return.js as module -->
     <script type="module" src="../js/return.js"></script>
 </body>
-</html></content>
-<parameter name="filePath">c:\Users\user\BlockFest\BlockFest\pages\return.html
+</html>

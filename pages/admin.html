@@ -7,73 +7,89 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav>
         <div class="nav-container">
             <h1 class="nav-logo">
-                <a href="index.html">
+                <a href="landing.html">
                     <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
                 </a>
             </h1>
-            <ul class="nav-links">
-                <li><a href="/pages/index.html">Home</a></li>
-                <li><a href="/pages/group.html">Create Group</a></li>
-                <li><a href="/pages/balance.html">Check Balance</a></li>
-                <li><a href="/pages/buy.html">Buy Ticket</a></li>
-                <li><a href="/pages/return.html">Return Ticket</a></li>
-                <li><a href="/pages/admin.html" class="active">Admin Panel</a></li>
+            <ul>
+                <li><a href="admin.html" class="active">Admin Panel</a></li>
+                <li><a href="landing.html">Switch Role</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="container">
-        <h2>Venue Admin Panel</h2>
+        <div class="page-hero">
+            <h2 class="page-title">Venue Admin Panel</h2>
+            <p class="page-subtitle">
+                Manage your event, monitor sales and verify the Blockchella chain.
+            </p>
+        </div>
 
         <!-- MetaMask Connection Status -->
         <div id="connectionStatus" class="status-bar">
-            <span id="statusText">Not Connected</span>
-            <button id="connectWalletBtn">Connect MetaMask</button>
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <button id="connectWalletBtn" class="btn btn-primary">
+                Connect MetaMask
+            </button>
         </div>
 
         <!-- Ownership Verification -->
-        <div id="ownershipIndicator" class="ownership-indicator hidden">
-            <span class="verified">✓ Ownership Verified</span>
+        <div id="ownershipIndicator" class="hidden"
+            style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                padding:12px 20px;
+                background:rgba(16,185,129,0.1);
+                border:1px solid rgba(16,185,129,0.3);
+                border-radius:999px;
+                width:fit-content;
+                margin-bottom:32px;
+                color:var(--color-accent-2);
+                font-weight:600;">
+            ✓ Ownership Verified
         </div>
 
         <!-- Stats Dashboard -->
         <div id="statsDashboard" class="dashboard hidden">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>Total Ticket Supply</h3>
+                    <div class="stat-label">Total Ticket Supply</div>
                     <div id="totalSupply" class="stat-value">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Total Tickets Sold</h3>
+                    <div class="stat-label">Total Tickets Sold</div>
                     <div id="totalSold" class="stat-value">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Total SETH in Escrow</h3>
+                    <div class="stat-label">Total SETH in Escrow</div>
                     <div id="totalEscrow" class="stat-value">0 SETH</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Total SETH Received</h3>
+                    <div class="stat-label">Total SETH Received</div>
                     <div id="totalReceived" class="stat-value">0 SETH</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Active Groups</h3>
+                    <div class="stat-label">Active Groups</div>
                     <div id="activeGroups" class="stat-value">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Completed Groups</h3>
+                    <div class="stat-label">Completed Groups</div>
                     <div id="completedGroups" class="stat-value">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Cancelled Groups</h3>
+                    <div class="stat-label">Cancelled Groups</div>
                     <div id="cancelledGroups" class="stat-value">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Tickets Returned</h3>
+                    <div class="stat-label">Tickets Returned</div>
                     <div id="ticketsReturned" class="stat-value">0</div>
                 </div>
             </div>
@@ -81,7 +97,7 @@
 
         <!-- Groups Table -->
         <div id="groupsSection" class="table-section hidden">
-            <h3>All Groups</h3>
+            <h3 style="margin-bottom:20px;">All Groups</h3>
             <table id="groupsTable" class="data-table">
                 <thead>
                     <tr>
@@ -102,17 +118,18 @@
 
         <!-- Blockchella Chain Explorer -->
         <div id="chainSection" class="table-section hidden">
-            <h3>Blockchella Chain</h3>
-            <div class="chain-stats">
-                <div class="stat-item">
-                    <label>Chain Length:</label>
-                    <span id="chainLengthDisplay">0</span> blocks
+            <h3 style="margin-bottom:20px;">Blockchella Chain</h3>
+            <div class="status-bar" style="margin-bottom:24px;">
+                <div>
+                    <span class="helper-text">Chain Length:</span>
+                    <span id="chainLengthDisplay" style="font-weight:700; margin-left:8px;">0</span> blocks
+                    <span style="margin:0 16px; color:var(--color-border);">|</span>
+                    <span class="helper-text">Integrity:</span>
+                    <span id="chainIntegrity" style="font-weight:700; margin-left:8px;">Not verified</span>
                 </div>
-                <div class="stat-item">
-                    <label>Chain Integrity:</label>
-                    <span id="chainIntegrity">Not verified</span>
-                </div>
-                <button id="verifyChainBtn">Verify Chain</button>
+                <button id="verifyChainBtn" class="btn btn-secondary">
+                    Verify Chain
+                </button>
             </div>
             <table class="data-table" id="chainTable">
                 <thead>
@@ -131,12 +148,23 @@
         </div>
 
         <!-- Controls -->
-        <div id="controls" class="controls hidden">
-            <label>
+        <div id="controls" class="hidden"
+            style="
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                margin-top:32px;
+                padding:24px;
+                background:rgba(255,255,255,0.03);
+                border-radius:20px;
+                border:1px solid var(--color-border);">
+            <label style="display:flex; align-items:center; gap:10px; color:var(--color-text-muted);">
                 <input type="checkbox" id="realTimeToggle" checked>
                 Enable Real-time Updates
             </label>
-            <button id="withdrawFundsBtn" class="withdraw-btn">Withdraw Funds</button>
+            <button id="withdrawFundsBtn" class="btn btn-danger">
+                Withdraw Funds
+            </button>
         </div>
 
         <!-- Withdraw Status -->
@@ -146,8 +174,6 @@
         <div id="messageArea" class="message-area"></div>
     </main>
 
-    <!-- Import admin.js as module -->
     <script type="module" src="../js/admin.js"></script>
 </body>
-</html></content>
-<parameter name="filePath">c:\Users\user\BlockFest\BlockFest\pages\admin.html
+</html>

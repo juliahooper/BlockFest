@@ -23,6 +23,10 @@ let countdownInterval = null; // Countdown timer interval
 const connectionStatus = document.getElementById('connectionStatus');
 const statusText = document.getElementById('statusText');
 const connectWalletBtn = document.getElementById('connectWalletBtn');
+const soloToggle = document.getElementById('soloToggle');
+const groupToggle = document.getElementById('groupToggle');
+const soloSection = document.getElementById('soloSection');
+const groupSection = document.getElementById('groupSection');
 const groupIdInput = document.getElementById('groupIdInput');
 const loadGroupBtn = document.getElementById('loadGroupBtn');
 const groupDetails = document.getElementById('groupDetails');
@@ -43,6 +47,8 @@ const ticketBalance = document.getElementById('ticketBalance');
 const finalGroupStatus = document.getElementById('finalGroupStatus');
 const etherscanLink = document.getElementById('etherscanLink');
 const messageArea = document.getElementById('messageArea');
+const buySoloBtn = document.getElementById('buySoloBtn');
+const soloTransactionStatus = document.getElementById('soloTransactionStatus');
 
 // ---------------------------------------------------------------------
 // Initialization
@@ -77,8 +83,41 @@ async function init() {
             }
         }
 
+        await fetchSoloDisplayData();
+
     } catch (error) {
         console.error('Initialization error:', error);
+    }
+}
+
+/**
+ * Fetches ticket price and availability via a read-only provider so the
+ * solo card populates without requiring MetaMask to be connected.
+ */
+async function fetchSoloDisplayData() {
+    try {
+        let available;
+
+        if (contract) {
+            ticketPrice = await contract.ticketPrice();
+            available = await contract.availableTickets();
+        } else {
+            const provider = new ethers.JsonRpcProvider(
+                'https://rpc.sepolia.org');
+            const readOnly = new ethers.Contract(
+                CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+            ticketPrice = await readOnly.ticketPrice();
+            available = await readOnly.availableTickets();
+        }
+
+        const soloPrice = document.getElementById('soloTicketPrice');
+        const soloAvail = document.getElementById('soloAvailableTickets');
+
+        if (soloPrice) soloPrice.textContent = formatSETH(ticketPrice) + ' SETH';
+        if (soloAvail) soloAvail.textContent = available.toString() + ' remaining';
+
+    } catch (e) {
+        console.warn('Could not fetch solo data:', e);
     }
 }
 
@@ -93,6 +132,21 @@ function setupEventListeners() {
     connectWalletBtn.addEventListener('click', connectWallet);
     loadGroupBtn.addEventListener('click', loadGroup);
     buyTicketBtn.addEventListener('click', buyTicket);
+    if (buySoloBtn) buySoloBtn.addEventListener('click', buySolo);
+
+    soloToggle.addEventListener('click', () => {
+        soloToggle.classList.add('active');
+        groupToggle.classList.remove('active');
+        if (soloSection) soloSection.classList.remove('hidden');
+        if (groupSection) groupSection.classList.add('hidden');
+    });
+
+    groupToggle.addEventListener('click', () => {
+        groupToggle.classList.add('active');
+        soloToggle.classList.remove('active');
+        if (groupSection) groupSection.classList.remove('hidden');
+        if (soloSection) soloSection.classList.add('hidden');
+    });
 
     // Listen for account changes
     if (window.ethereum) {
@@ -432,6 +486,97 @@ async function buyTicket() {
 }
 
 /**
+ * Handles solo ticket purchase: creates a single-member group then joins it.
+ */
+async function buySolo() {
+    console.log('buySolo called');
+    console.log('contract:', contract);
+    console.log('userAddress:', userAddress);
+    console.log('ticketPrice:', ticketPrice);
+
+    // Change 3: Network check
+    if (!window.ethereum) {
+        showMessage('MetaMask not detected. Please install MetaMask.', 'error');
+        return;
+    }
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const network = await provider.getNetwork();
+    console.log('Current network:', network.chainId.toString());
+
+    if (network.chainId !== 11155111n) {
+        showMessage('Wrong network. Please switch MetaMask to Sepolia.', 'error');
+        return;
+    }
+
+    if (!contract || !userAddress) {
+        showMessage('Please connect your MetaMask wallet first.', 'error');
+        return;
+    }
+
+    console.log('Sending with value:', ticketPrice.toString());
+
+    buySoloBtn.disabled = true;
+    buySoloBtn.textContent = 'Processing...';
+    soloTransactionStatus.textContent = 'Creating solo group...';
+    soloTransactionStatus.style.color = '';
+
+    try {
+        // Step 1: Create a solo group with only this user as member
+        const createTx = await contract.createGroup([], 1);
+        console.log('createGroup tx sent:', createTx.hash);
+        soloTransactionStatus.textContent = 'Group creation submitted. Waiting for confirmation...';
+
+        const createReceipt = await createTx.wait();
+        console.log('createGroup confirmed:', createReceipt);
+
+        // Parse groupId from receipt logs
+        let soloGroupId;
+        for (const log of createReceipt.logs) {
+            try {
+                const parsed = contract.interface.parseLog(log);
+                if (parsed && parsed.name === 'GroupCreated') {
+                    soloGroupId = parsed.args.groupId;
+                    break;
+                }
+            } catch {}
+        }
+
+        if (!soloGroupId) {
+            throw new Error('Could not parse group ID from transaction receipt.');
+        }
+
+        console.log('soloGroupId:', soloGroupId.toString());
+        soloTransactionStatus.textContent = `Group created (ID: ${soloGroupId}). Purchasing ticket...`;
+
+        // Step 2: Join the group to purchase the ticket
+        const joinTx = await contract.joinGroup(soloGroupId, { value: ticketPrice });
+        console.log('joinGroup tx sent:', joinTx.hash);
+        soloTransactionStatus.textContent = 'Ticket purchase submitted. Waiting for confirmation...';
+
+        await joinTx.wait();
+
+        soloTransactionStatus.textContent = 'Ticket purchased successfully!';
+        soloTransactionStatus.style.color = 'var(--color-accent-2)';
+        showMessage('Solo ticket purchased successfully!', 'success');
+
+    } catch (error) {
+        console.error('buySolo error:', error);
+        console.error('error code:', error.code);
+        console.error('error message:', error.message);
+        console.error('error data:', error.data);
+
+        const friendly = parseContractError(error);
+        soloTransactionStatus.textContent = friendly;
+        soloTransactionStatus.style.color = 'var(--color-danger)';
+        showMessage(`Purchase failed: ${friendly}`, 'error');
+    } finally {
+        buySoloBtn.disabled = false;
+        buySoloBtn.textContent = 'Buy Ticket Now';
+    }
+}
+
+/**
  * Shows the purchase success panel.
  */
 function showPurchaseSuccess(userTicketBalance, isGroupComplete, txHash) {
@@ -491,32 +636,28 @@ function startCountdown(deadline) {
  * Parses contract errors into user-friendly messages.
  */
 function parseContractError(error) {
-    if (error.code === 4001) {
-        return 'Transaction rejected by user.';
+    // User rejected in MetaMask — ethers v6 uses ACTION_REJECTED, v5 uses 4001
+    if (
+        error.code === 'ACTION_REJECTED' ||
+        error.code === 4001 ||
+        error.reason === 'rejected' ||
+        error.info?.error?.code === 4001
+    ) {
+        return 'Transaction cancelled.';
     }
 
-    if (error.code === 4902) {
-        return 'Please add the Sepolia test network to MetaMask.';
+    if (error.code === 4902 || error.info?.error?.code === 4902) {
+        return 'Please add the Sepolia network to MetaMask.';
     }
 
-    if (error.message.includes('network')) {
-        return 'Please switch MetaMask to the Sepolia test network.';
-    }
-
-    // Try to parse contract revert reasons
-    if (error.data) {
-        try {
-            const decoded = contract.interface.parseError(error.data);
-            if (decoded) {
-                return decoded.name + ': ' + decoded.args.join(', ');
-            }
-        } catch {
-            // Ignore parsing errors
-        }
-    }
-
-    // Common contract error patterns
     const message = error.message || error.toString();
+
+    if (message.includes('network') || message.includes('chain')) {
+        return 'Wrong network — please switch MetaMask to Sepolia.';
+    }
+    if (error.code === 'BAD_DATA' || message.includes('could not decode result data')) {
+        return 'Could not reach the contract — make sure MetaMask is on Sepolia.';
+    }
     if (message.includes('Group does not exist')) {
         return 'This group does not exist.';
     }
@@ -530,13 +671,22 @@ function parseContractError(error) {
         return 'You have already paid for this group.';
     }
     if (message.includes('Group deadline has already passed')) {
-        return 'The group deadline has already passed.';
+        return 'This group has expired.';
     }
     if (message.includes('Must send exact ticket price in SETH')) {
-        return 'You must send the exact ticket price.';
+        return 'Incorrect payment amount — please try again.';
+    }
+    if (message.includes('Not enough tickets available')) {
+        return 'Not enough tickets available.';
+    }
+    if (message.includes('already in an active group')) {
+        return 'You are already in an active group.';
+    }
+    if (message.includes('already own a ticket')) {
+        return 'You already own a ticket.';
     }
 
-    return message;
+    return 'Something went wrong. Please try again.';
 }
 
 // ---------------------------------------------------------------------

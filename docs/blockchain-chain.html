@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Chain Blockchain — Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html">🏠 Home</a>
+            <a href="getting-started.html">🚀 Getting Started</a>
+            <a href="smart-contract.html">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html" class="active">⛓ On-Chain Blockchain</a>
+            <a href="pages.html">🖥 Frontend Pages</a>
+            <a href="faq.html">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">On-Chain Blockchain</p>
+            <h1>A Blockchain Within a Blockchain</h1>
+            <p>
+                Blockchella implements its own mini-blockchain <em>inside</em> the Ethereum smart contract.
+                Every time a group successfully completes and tickets are distributed, a new block is
+                appended to this chain — creating a permanent, tamper-evident, cryptographically linked
+                record of every ticket group that ever completed.
+            </p>
+            <p>
+                This is a blockchain running on top of Ethereum — a chain within a chain.
+            </p>
+
+            <h2>Why Build This?</h2>
+            <p>
+                Ethereum already stores all transaction history, so why build a separate chain? A few reasons:
+            </p>
+            <ul style="color:var(--color-text-muted); line-height:2; padding-left:24px;">
+                <li><strong style="color:var(--color-text);">Custom data structure</strong> — each block stores exactly the information relevant to ticketing: group ID, member addresses, ticket count, and timestamp.</li>
+                <li><strong style="color:var(--color-text);">Cryptographic integrity</strong> — each block commits to the hash of the previous block, so you can verify the entire history hasn't been tampered with in a single call.</li>
+                <li><strong style="color:var(--color-text);">Educational demonstration</strong> — Blockchella is a proof-of-concept that demonstrates core blockchain concepts (hashing, linking, genesis block, integrity verification) implemented in Solidity.</li>
+                <li><strong style="color:var(--color-text);">Queryable history</strong> — the admin panel can read and display every block directly from the contract without needing event indexing or a backend.</li>
+            </ul>
+
+            <h2>The Genesis Block</h2>
+            <p>
+                Like Bitcoin and Ethereum themselves, Blockchella's chain begins with a genesis block —
+                block number 0 — created at contract deployment. It is a placeholder with no group data:
+            </p>
+            <pre>Block #0 (Genesis)
+  groupId:      0
+  previousHash: 0x0000...0000
+  blockHash:    keccak256("BlockFest Genesis")
+  members:      []
+  ticketCount:  0
+  timestamp:    deployment time</pre>
+            <p>
+                Every subsequent block's <code>previousHash</code> links back to this origin,
+                forming an unbroken chain.
+            </p>
+
+            <h2>How Blocks Are Linked</h2>
+            <p>
+                Each block's hash is computed by hashing its own data together with the previous block's hash.
+                This means changing any block in history would change its hash, which would break the link
+                to the next block, and so on — making tampering immediately detectable.
+            </p>
+            <pre style="font-size:0.8rem; line-height:1.9;">
+┌──────────────────────────┐
+│  Block #0  (Genesis)     │
+│  hash: 0xABCD...         │
+└────────────┬─────────────┘
+             │ previousHash
+┌────────────▼─────────────┐
+│  Block #1                │
+│  groupId: 3              │
+│  members: [0x111, 0x222] │
+│  hash: keccak256(        │
+│    1, 3, 0xABCD...,      │
+│    timestamp,            │
+│    members, 2            │
+│  ) = 0xEF01...           │
+└────────────┬─────────────┘
+             │ previousHash
+┌────────────▼─────────────┐
+│  Block #2                │
+│  groupId: 7              │
+│  members: [0x333]        │
+│  hash: keccak256(        │
+│    2, 7, 0xEF01...,      │
+│    timestamp,            │
+│    members, 1            │
+│  ) = 0x2345...           │
+└──────────────────────────┘</pre>
+
+            <h2>What Each Block Contains</h2>
+            <div style="display:flex; flex-direction:column; gap:8px; margin:8px 0 24px;">
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">blockNumber</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">Zero-based position in the chain. Block 0 is genesis.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">groupId</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">The Blockchella group ID that this block represents.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">previousHash</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">The <code>blockHash</code> of the block immediately before this one in the chain.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">blockHash</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">A <code>keccak256</code> hash committing to this block's position, group, previous hash, timestamp, members, and ticket count.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">members</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">Array of wallet addresses that received tickets in this group.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">timestamp</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">The Ethereum block timestamp when this chain block was added.</span>
+                </div>
+                <div style="display:flex; gap:16px; padding:12px 18px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:12px; align-items:flex-start;">
+                    <code style="flex-shrink:0; width:130px;">ticketCount</code>
+                    <span style="font-size:0.9rem; color:var(--color-text-muted);">Number of tickets distributed in this group (equals the number of members).</span>
+                </div>
+            </div>
+
+            <h2>Verifying Chain Integrity</h2>
+            <p>
+                The <code>verifyChain()</code> function iterates every block from index 1 to the
+                current chain length and checks that each block's <code>previousHash</code>
+                matches the actual <code>blockHash</code> of the block before it.
+            </p>
+            <p>
+                If all links match, it returns <code>true</code> — the chain is intact and has not
+                been tampered with. If any link is broken, it returns <code>false</code>.
+            </p>
+            <p>
+                You can trigger this check from the Admin Panel using the <strong>Verify Chain</strong>
+                button, which calls the function as a read-only view (no gas cost, no transaction needed).
+            </p>
+            <div style="padding:14px 18px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:14px; font-size:0.9rem; margin:16px 0;">
+                ⚠️ <strong>Gas warning:</strong> <code>verifyChain()</code> contains an unbounded loop.
+                It is safe to call as a view function off-chain (no gas cost), but must never be called
+                inside a transaction or from another contract — it would exceed the block gas limit
+                as the chain grows.
+            </div>
+
+            <h2>Why This Is Meaningful</h2>
+            <p>
+                Ethereum is itself a blockchain. Every transaction that calls Blockchella's contract is
+                already recorded permanently on the Ethereum chain. So Blockchella's internal chain is
+                a deliberate demonstration — it shows that the same fundamental concepts (cryptographic
+                hashing, linked blocks, a genesis block, tamper detection) can be implemented in
+                application-layer code running <em>on top of</em> another blockchain.
+            </p>
+            <p>
+                It is a blockchain that understands it is a blockchain.
+            </p>
+        </main>
+    </div>
+</body>
+</html>

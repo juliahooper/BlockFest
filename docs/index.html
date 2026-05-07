@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html" class="active">🏠 Home</a>
+            <a href="getting-started.html">🚀 Getting Started</a>
+            <a href="smart-contract.html">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html">⛓ On-Chain Blockchain</a>
+            <a href="pages.html">🖥 Frontend Pages</a>
+            <a href="faq.html">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">Welcome to</p>
+            <h1>Blockchella Docs</h1>
+            <p style="font-size:1.1rem; color:var(--color-text); margin-bottom:32px;">
+                Blockchella is a blockchain-based group ticketing system built on Ethereum Sepolia testnet.
+                It uses a smart contract to coordinate group purchases, hold funds in escrow, and guarantee
+                that either everyone in your group gets a ticket or no one is charged.
+            </p>
+
+            <h2>What is Blockchella?</h2>
+            <p>
+                Blockchella is a proof-of-concept event ticketing platform that replaces centralised ticket
+                vendors with a transparent, trustless smart contract. Attendees form groups on-chain,
+                pay into escrow together, and receive ERC-20 ticket tokens only when the full group has paid.
+                If the group deadline passes without everyone paying, all escrow funds are automatically returned.
+            </p>
+            <p>
+                The system also includes a custom on-chain blockchain — a chain of blocks recorded inside
+                the smart contract — that stores a permanent, cryptographically linked record of every
+                completed ticket group.
+            </p>
+
+            <h2>Contract</h2>
+            <p>The Blockchella smart contract is deployed on the Sepolia Ethereum testnet.</p>
+            <div style="
+                background: rgba(124,58,237,0.08);
+                border: 1px solid rgba(124,58,237,0.2);
+                border-radius: 16px;
+                padding: 20px 24px;
+                margin: 16px 0 32px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;">
+                <div>
+                    <p style="margin:0 0 4px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-text-muted);">Contract Address (Sepolia)</p>
+                    <code style="font-size:0.95rem;">0x7454E732730346FDF8310Fef1850c96606cB8D7b</code>
+                </div>
+                <a href="https://sepolia.etherscan.io/address/0x7454E732730346FDF8310Fef1850c96606cB8D7b"
+                    target="_blank"
+                    class="docs-nav-link">
+                    View on Etherscan ↗
+                </a>
+            </div>
+
+            <h2>Browse the Docs</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; margin-top:8px;">
+                <a href="getting-started.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">🚀</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Getting Started</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">Install MetaMask, get SETH, connect your wallet</div>
+                </a>
+                <a href="smart-contract.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">📄</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Smart Contract</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">Functions, security features, ERC-20 implementation</div>
+                </a>
+                <a href="group-ticketing.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">👥</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Group Ticketing</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">How group escrow, deadlines, and refunds work</div>
+                </a>
+                <a href="blockchain-chain.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">⛓</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">On-Chain Blockchain</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">The chain of blocks recorded inside the contract</div>
+                </a>
+                <a href="pages.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">🖥</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">Frontend Pages</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">Every page in the app explained</div>
+                </a>
+                <a href="faq.html" style="display:block; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; padding:20px; text-decoration:none; transition:border-color 180ms ease;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                    <div style="font-size:1.5rem; margin-bottom:10px;">❓</div>
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-text);">FAQ</div>
+                    <div style="font-size:0.85rem; color:var(--color-text-muted);">Common questions answered in plain English</div>
+                </a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

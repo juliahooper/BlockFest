@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Pages — Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html">🏠 Home</a>
+            <a href="getting-started.html">🚀 Getting Started</a>
+            <a href="smart-contract.html">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html">⛓ On-Chain Blockchain</a>
+            <a href="pages.html" class="active">🖥 Frontend Pages</a>
+            <a href="faq.html">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">Frontend Pages</p>
+            <h1>App Pages Overview</h1>
+            <p>
+                Blockchella's frontend is a set of plain HTML pages, each served statically with no framework.
+                All blockchain interactions happen in the browser via ethers.js and MetaMask.
+                Below is every page, who uses it, and what it does.
+            </p>
+
+            <!-- landing.html -->
+            <h2>landing.html — Role Selector</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">All Users</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">No wallet needed</span>
+            </div>
+            <p>The first page users see. Presents three role cards: Attendee, Doorman, and Venue Admin. Clicking a card navigates to the appropriate entry point for that role. No MetaMask connection is required here.</p>
+
+            <!-- home.html -->
+            <h2>home.html — Attendee Home</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee</span>
+            </div>
+            <p>The main landing page for attendees. Explains the Blockchella concept with a hero section, shows key stats pulled from the contract (tickets available, total sold), and links to all attendee actions. Also includes a live connection status bar.</p>
+
+            <!-- get-started.html -->
+            <h2>get-started.html — Setup Guide</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">No wallet needed</span>
+            </div>
+            <p>An in-app walkthrough for first-time users. Covers installing MetaMask, switching to Sepolia, and getting SETH from a faucet. Includes a wallet connect section and a connection status check to confirm setup is complete.</p>
+
+            <!-- group.html -->
+            <h2>group.html — Create Group</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee (Group Creator)</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">Requires wallet</span>
+            </div>
+            <p>
+                Lets a connected attendee create a new group by entering their friends' wallet addresses and a deadline in hours.
+                On submission, calls <code>createGroup(members, deadlineHours)</code>. After creation, the page shows the generated Group ID which must be shared with all group members so they can join and pay.
+            </p>
+            <p><strong>Key features:</strong> dynamic friend address fields, total cost preview, live Group ID display after creation.</p>
+
+            <!-- buy.html -->
+            <h2>buy.html — Buy Ticket</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">Requires wallet to purchase</span>
+            </div>
+            <p>
+                Two-mode purchase page with a toggle between <strong>Buy Solo</strong> and <strong>Join a Group</strong>.
+            </p>
+            <ul style="color:var(--color-text-muted); line-height:2; padding-left:24px;">
+                <li><strong style="color:var(--color-text);">Buy Solo</strong> — Creates a single-member group and immediately purchases the ticket. Ticket price and availability are loaded without needing MetaMask.</li>
+                <li><strong style="color:var(--color-text);">Join a Group</strong> — Enter a Group ID to load group details (member list, deadline countdown, payment status) then call <code>joinGroup</code> to pay into escrow.</li>
+            </ul>
+
+            <!-- balance.html -->
+            <h2>balance.html — My Ticket</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">Requires wallet</span>
+            </div>
+            <p>
+                Shows the connected wallet's ticket status, SETH balance, and group membership details.
+                Displays a colour-coded ticket status (green = ticket held, red = no ticket).
+                If the wallet is in an active group, shows the group countdown timer and member payment progress.
+                Includes a Refresh button and real-time updates.
+            </p>
+
+            <!-- verify.html -->
+            <h2>verify.html — Ticket Verification</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(56,189,248,0.1); border-radius:999px; font-size:0.8rem; color:#7dd3fc;">Doorman</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">No wallet needed</span>
+            </div>
+            <p>
+                For use by event door staff. Enter any wallet address to check whether it holds a valid ticket token.
+                Displays a large ✓ VALID or ✗ INVALID result. No MetaMask required — uses a read-only provider.
+                This page is not linked from the attendee navigation to keep role separation clear.
+            </p>
+
+            <!-- return.html -->
+            <h2>return.html — Return Ticket</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee (Ticket Holder)</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">Requires wallet</span>
+            </div>
+            <p>
+                Allows a ticket holder to return their ticket for a full refund of the ticket price.
+                Shows current balances, refund amount, and a confirmation checkbox before enabling the
+                return button. Also includes an "Unclaimed Refunds" section to claim any failed push
+                refunds via <code>claimRefund()</code>.
+            </p>
+
+            <!-- admin.html -->
+            <h2>admin.html — Venue Admin Panel</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(16,185,129,0.1); border-radius:999px; font-size:0.8rem; color:#6ee7b7;">Venue (Contract Owner Only)</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">Requires owner wallet</span>
+            </div>
+            <p>
+                Full admin dashboard for the contract owner. Shows a stats grid (tickets sold, SETH in escrow,
+                active/completed/cancelled groups), a paginated table of all groups, and the full Blockchella
+                chain explorer with block hash verification. Includes a Withdraw Funds button and real-time
+                updates toggle.
+            </p>
+            <p>Connecting with any wallet other than the contract owner address will show an ownership mismatch warning.</p>
+
+            <!-- wallet.html -->
+            <h2>wallet.html — Wallet Setup</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <span style="padding:4px 12px; background:rgba(124,58,237,0.1); border-radius:999px; font-size:0.8rem; color:#c4b5fd;">Attendee</span>
+                <span style="padding:4px 12px; background:rgba(255,255,255,0.05); border-radius:999px; font-size:0.8rem; color:var(--color-text-muted);">No wallet needed</span>
+            </div>
+            <p>
+                A dedicated guide page helping new users set up MetaMask, switch to Sepolia, and understand
+                what a wallet is. Linked from the attendee navigation for users who don't know where to start.
+                Purely informational — no contract interaction.
+            </p>
+        </main>
+    </div>
+</body>
+</html>

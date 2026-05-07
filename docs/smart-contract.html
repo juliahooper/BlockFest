@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Contract — Blockchella Docs</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="nav-logo">
+                <a href="../pages/home.html">
+                    <img src="../images/blockchellalogo.svg" alt="Blockchella" class="nav-logo-img">
+                </a>
+            </h1>
+            <ul>
+                <li><a href="../pages/home.html" class="btn btn-secondary" style="padding:10px 18px;">← Back to App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--color-text-muted); margin-bottom:16px; padding:0 14px;">Documentation</p>
+            <a href="index.html">🏠 Home</a>
+            <a href="getting-started.html">🚀 Getting Started</a>
+            <a href="smart-contract.html" class="active">📄 Smart Contract</a>
+            <a href="group-ticketing.html">👥 Group Ticketing</a>
+            <a href="blockchain-chain.html">⛓ On-Chain Blockchain</a>
+            <a href="pages.html">🖥 Frontend Pages</a>
+            <a href="faq.html">❓ FAQ</a>
+        </aside>
+
+        <main class="docs-content">
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:8px;">Smart Contract</p>
+            <h1>BlockFest Contract</h1>
+            <p>
+                The Blockchella smart contract is the heart of the system. It is written in Solidity,
+                deployed on Ethereum Sepolia, and handles everything: group creation, escrow,
+                ticket distribution, refunds, and the on-chain blockchain record.
+                No backend server is involved — all logic runs on-chain.
+            </p>
+
+            <div style="
+                background: rgba(124,58,237,0.08);
+                border: 1px solid rgba(124,58,237,0.2);
+                border-radius: 16px;
+                padding: 20px 24px;
+                margin: 24px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;">
+                <div>
+                    <p style="margin:0 0 4px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-text-muted);">Deployed on Sepolia</p>
+                    <code style="font-size:0.95rem;">0x7454E732730346FDF8310Fef1850c96606cB8D7b</code>
+                </div>
+                <a href="https://sepolia.etherscan.io/address/0x7454E732730346FDF8310Fef1850c96606cB8D7b"
+                    target="_blank" class="docs-nav-link">View on Etherscan ↗</a>
+            </div>
+
+            <h2>What is a Smart Contract?</h2>
+            <p>
+                A smart contract is a program that lives on the blockchain. Once deployed, it runs
+                exactly as written — no one can alter it, no company controls it, and it executes
+                automatically when its conditions are met. Blockchella uses a smart contract so that
+                the ticketing rules are enforced by code, not by trust in a company.
+            </p>
+
+            <h2>ERC-20 Ticket Tokens</h2>
+            <p>
+                Blockchella implements the ERC-20 token standard, but with one key restriction:
+                tickets can only be transferred back to the contract owner (the venue). This prevents
+                scalping and secondary market resales. Each wallet can hold at most one ticket,
+                represented as a balance of <code>1</code> in the ERC-20 token mapping.
+            </p>
+            <p>
+                The token is named <code>BlockFest Ticket</code> with the symbol <code>BFT</code>
+                and zero decimal places — tickets are whole units only, you cannot own half a ticket.
+            </p>
+
+            <h2>Key Functions</h2>
+
+            <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:8px;">
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">createGroup(address[] members, uint256 deadlineHours)</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Creates a new group with the caller as creator plus any additional member addresses.
+                        Pass an empty array to create a solo group (just yourself). The deadline is
+                        set in hours from the current block timestamp — between 1 and 168 hours.
+                        Everyone named in the group must pay before the deadline or all funds are refunded.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">joinGroup(uint256 groupId)</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Called by a group member to pay their ticket price into escrow. Must send exactly
+                        the ticket price in SETH as the transaction value. On the first payment, the contract
+                        reserves tickets for the entire group. When the last member pays, tickets are
+                        automatically distributed to all members and the group is marked complete.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">returnTicket()</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Allows a ticket holder to return their ticket for a full refund of the ticket price.
+                        The ticket token is burned and SETH is sent back to the caller's wallet.
+                        Gas fees are not refunded.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">refundGroup(uint256 groupId)</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Can be called by anyone once a group's deadline has passed without all members
+                        paying. Sets the group to Cancelled and refunds all members who had paid into
+                        escrow. This lets anyone trigger the cleanup, not just the group creator.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">cancelGroup(uint256 groupId)</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Only the group creator or contract owner can call this before the deadline.
+                        Cancels an active group and refunds all members who have paid. Useful if the
+                        creator realises the group won't fill up.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">claimRefund()</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        If an automatic refund push failed (rare edge case, e.g. the recipient is a
+                        contract that rejects ETH), the unclaimed amount is recorded and the user can
+                        call this to pull their refund manually.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">availableTickets()</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        A read-only view function that returns how many tickets are still available.
+                        Computed as <code>totalTickets − reservedTickets − soldTickets</code>.
+                        The frontend calls this without needing MetaMask connected.
+                    </p>
+                </div>
+                <div style="padding:20px 24px; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px;">
+                    <code style="font-size:1rem; display:block; margin-bottom:10px;">verifyChain()</code>
+                    <p style="margin:0; font-size:0.9rem;">
+                        Iterates every block in the on-chain chain and checks that each block's
+                        <code>previousHash</code> matches the actual hash of the block before it.
+                        Returns <code>true</code> if all links are valid. Intended for off-chain use only —
+                        calling it in a transaction would use too much gas as the chain grows.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Security Features</h2>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="padding:16px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-accent-2);">ReentrancyGuard</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">Inherited from OpenZeppelin. The <code>nonReentrant</code> modifier on all value-transferring functions prevents a malicious contract from calling back into Blockchella mid-execution to drain funds.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-accent-2);">Checks-Effects-Interactions</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">All functions validate inputs first (Checks), then update contract state (Effects), then make external calls like ETH transfers (Interactions). This ordering prevents state from being manipulated by reentrant calls.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-accent-2);">Pull Refund Fallback</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">If a push refund fails (e.g. the recipient contract rejects ETH), the amount is saved and the user can pull it with <code>claimRefund()</code>. No funds are ever permanently lost.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-accent-2);">Access Control</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);">Owner-only functions (like <code>withdrawFunds</code>) are protected by the <code>onlyOwner</code> modifier. Group cancel is restricted to the group creator or contract owner via <code>onlyCreatorOrOwner</code>.</div>
+                </div>
+                <div style="padding:16px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:14px;">
+                    <div style="font-weight:700; margin-bottom:6px; color:var(--color-accent-2);">Escrow Accounting</div>
+                    <div style="font-size:0.9rem; color:var(--color-text-muted);"><code>withdrawFunds</code> can only withdraw funds not locked in active escrow or unclaimed refunds. The owner can never accidentally take money belonging to active groups.</div>
+                </div>
+            </div>
+
+            <h2>Deployment Details</h2>
+            <p>
+                The contract is deployed with two constructor arguments: the ticket price in wei and
+                the total ticket supply. Both are fixed at deployment and can never be changed.
+                The entire ticket supply is minted to the owner's wallet at deployment; tickets are
+                transferred from the owner's pool to members when a group completes — the total
+                supply never increases.
+            </p>
+        </main>
+    </div>
+</body>
+</html>
